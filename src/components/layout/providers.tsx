@@ -1,10 +1,11 @@
 'use client';
-import { ClerkProvider } from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
 import { useTheme } from 'next-themes';
 import React from 'react';
 import { ActiveThemeProvider } from '../themes/active-theme';
 import QueryProvider from './query-provider';
+
+// Mock Clerk Provider per demo senza auth
+// In produzione, sostituire con vero ClerkProvider
 
 export default function Providers({
   activeThemeValue,
@@ -18,28 +19,26 @@ export default function Providers({
   return (
     <>
       <ActiveThemeProvider initialTheme={activeThemeValue}>
-        <ClerkProvider
-          appearance={{
-            baseTheme: resolvedTheme === 'dark' ? dark : undefined,
-            variables: {
-              colorPrimary: 'var(--primary)',
-              colorPrimaryForeground: 'var(--primary-foreground)',
-              colorDanger: 'var(--destructive)',
-              colorBackground: 'var(--card)',
-              colorForeground: 'var(--foreground)',
-              colorMuted: 'var(--muted)',
-              colorMutedForeground: 'var(--muted-foreground)',
-              colorInput: 'var(--input)',
-              colorInputForeground: 'var(--foreground)',
-              colorBorder: 'var(--border)',
-              colorRing: 'var(--ring)',
-              fontFamily: 'var(--font-sans)'
-            }
-          }}
-        >
-          <QueryProvider>{children}</QueryProvider>
-        </ClerkProvider>
+        <QueryProvider>{children}</QueryProvider>
       </ActiveThemeProvider>
     </>
   );
 }
+
+// Mock hooks per Clerk
+export const useUser = () => ({
+  isSignedIn: true,
+  user: {
+    id: 'demo-user',
+    fullName: 'Demo User',
+    primaryEmailAddress: { emailAddress: 'demo@medianalytics.pro' },
+    imageUrl: null
+  }
+});
+
+export const useAuth = () => ({
+  isLoaded: true,
+  userId: 'demo-user',
+  sessionId: 'demo-session',
+  getToken: async () => 'demo-token'
+});

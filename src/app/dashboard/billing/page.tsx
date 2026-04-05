@@ -2,52 +2,67 @@
 
 import PageContainer from '@/components/layout/page-container';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useOrganization } from '@clerk/nextjs';
-import { PricingTable } from '@clerk/nextjs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
-import { billingInfoContent } from '@/config/infoconfig';
 
 export default function BillingPage() {
-  const { organization, isLoaded } = useOrganization();
-
   return (
-    <PageContainer
-      isLoading={!isLoaded}
-      access={!!organization}
-      accessFallback={
-        <div className='flex min-h-[400px] items-center justify-center'>
-          <div className='space-y-2 text-center'>
-            <h2 className='text-2xl font-semibold'>No Organization Selected</h2>
-            <p className='text-muted-foreground'>
-              Please select or create an organization to view billing information.
-            </p>
-          </div>
+    <PageContainer>
+      <div className='flex flex-col gap-6'>
+        <div className='flex items-center justify-between'>
+          <h1 className='text-3xl font-bold tracking-tight'>Fatturazione</h1>
         </div>
-      }
-      infoContent={billingInfoContent}
-      pageTitle='Billing & Plans'
-      pageDescription={`Manage your subscription and usage limits for ${organization?.name}`}
-    >
-      <div className='space-y-6'>
-        {/* Info Alert */}
-        <Alert>
-          <Icons.info className='h-4 w-4' />
-          <AlertDescription>
-            Plans and subscriptions are managed through Clerk Billing. Subscribe to a plan to unlock
-            features and higher limits.
-          </AlertDescription>
-        </Alert>
 
-        {/* Clerk Pricing Table */}
+        <div className='grid gap-6 md:grid-cols-3'>
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardDescription>Piano Attuale</CardDescription>
+              <CardTitle className='text-2xl'>Pro</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='text-sm text-muted-foreground'>€99/mese - Rinnovo il 15/05/2025</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardDescription>Fatturato Mese</CardDescription>
+              <CardTitle className='text-2xl'>€31.240</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='text-sm text-green-600 flex items-center'>
+                <Icons.trendingUp className='mr-1 h-4 w-4' />
+                +11.4% vs mese scorso
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardDescription>Stato Pagamento</CardDescription>
+              <CardTitle className='text-2xl text-green-600'>Attivo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='text-sm text-muted-foreground'>Ultimo pagamento: 15/04/2025</div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card>
           <CardHeader>
-            <CardTitle>Available Plans</CardTitle>
-            <CardDescription>Choose a plan that fits your organization's needs</CardDescription>
+            <CardTitle>Metodo di Pagamento</CardTitle>
+            <CardDescription>Gestisci le tue carte e fatture</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='mx-auto max-w-4xl'>
-              <PricingTable for='organization' />
+            <div className='flex items-center gap-4 p-4 border rounded-lg'>
+              <Icons.creditCard className='h-8 w-8 text-primary' />
+              <div className='flex-1'>
+                <p className='font-medium'>•••• •••• •••• 4242</p>
+                <p className='text-sm text-muted-foreground'>Scadenza 12/26</p>
+              </div>
+              <Button variant='outline' size='sm'>
+                Modifica
+              </Button>
             </div>
           </CardContent>
         </Card>
