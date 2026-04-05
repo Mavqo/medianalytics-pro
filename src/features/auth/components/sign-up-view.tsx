@@ -1,11 +1,13 @@
+'use client';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { SignUp as ClerkSignUpForm } from '@clerk/nextjs';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Icons } from '@/components/icons';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { InteractiveGridPattern } from './interactive-grid';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: 'Authentication',
@@ -13,6 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpViewPage({ stars }: { stars: number }) {
+  const router = useRouter();
+
+  const handleDemoRegister = () => {
+    // Demo mode: redirect diretto senza auth
+    router.push('/dashboard/overview');
+  };
+
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <Link
@@ -39,7 +48,7 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
           >
             <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3' />
           </svg>
-          Logo
+          MediAnalytics Pro
         </div>
         <InteractiveGridPattern
           className={cn(
@@ -50,20 +59,19 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
             <p className='text-lg'>
-              &ldquo;This starter template has saved me countless hours of work and helped me
-              deliver projects to my clients faster than ever before.&rdquo;
+              &ldquo;Dashboard professionale per centri fisioterapia e benessere. Gestisci pazienti,
+              appuntamenti e fatturazione in un unico posto.&rdquo;
             </p>
-            <footer className='text-sm'>Random Dude</footer>
+            <footer className='text-sm'>MediAnalytics Team</footer>
           </blockquote>
         </div>
       </div>
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
-          {/* github link  */}
           <Link
             className={cn('group inline-flex hover:text-yellow-200')}
             target='_blank'
-            href={'https://github.com/kiranism/next-shadcn-dashboard-starter'}
+            href={'https://github.com/Mavqo/medianalytics-pro'}
           >
             <div className='flex items-center'>
               <GitHubLogoIcon className='size-4' />
@@ -77,22 +85,35 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
               <span className='font-display font-medium'>{stars}</span>
             </div>
           </Link>
-          <ClerkSignUpForm
-            initialValues={{
-              emailAddress: 'your_mail+clerk_test@example.com'
-            }}
-          />
+
+          {/* Demo Sign Up */}
+          <div className='w-full space-y-4 text-center'>
+            <div className='space-y-2'>
+              <h1 className='text-2xl font-bold'>Create account</h1>
+              <p className='text-muted-foreground text-sm'>Demo mode - registration is disabled</p>
+            </div>
+            <Button onClick={handleDemoRegister} className='w-full'>
+              Continue to Demo
+            </Button>
+            <p className='text-sm'>
+              Already have an account?{' '}
+              <Link href='/auth/sign-in' className='underline'>
+                Sign in
+              </Link>
+            </p>
+          </div>
+
           <div className='text-muted-foreground space-y-2 px-8 text-center text-xs'>
             <p>
-              This is an{' '}
+              This is a{' '}
               <Link href='/about' className='hover:text-primary underline underline-offset-4'>
-                open-source project
+                demo dashboard
               </Link>{' '}
-              for demo purposes. Authentication is handled securely by Clerk.
+              for healthcare professionals.
             </p>
             <p>
               <Link
-                href='https://github.com/kiranism/next-shadcn-dashboard-starter'
+                href='https://github.com/Mavqo/medianalytics-pro'
                 target='_blank'
                 className='hover:text-primary underline underline-offset-4'
               >
