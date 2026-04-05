@@ -1,6 +1,6 @@
 'use client';
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,79 +11,105 @@ import {
 } from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
-import React from 'react';
+import { fatturatoMensile } from '@/lib/data/analytics';
 
-const chartData = [
-  { month: 'January', desktop: 342, mobile: 245 },
-  { month: 'February', desktop: 876, mobile: 654 },
-  { month: 'March', desktop: 512, mobile: 387 },
-  { month: 'April', desktop: 629, mobile: 521 },
-  { month: 'May', desktop: 458, mobile: 412 },
-  { month: 'June', desktop: 781, mobile: 598 },
-  { month: 'July', desktop: 394, mobile: 312 },
-  { month: 'August', desktop: 925, mobile: 743 },
-  { month: 'September', desktop: 647, mobile: 489 },
-  { month: 'October', desktop: 532, mobile: 476 },
-  { month: 'November', desktop: 803, mobile: 687 },
-  { month: 'December', desktop: 271, mobile: 198 }
-];
+// Transform data for chart
+const chartData = fatturatoMensile.map((item) => ({
+  month: item.mese,
+  fatturato: item.fatturato,
+  obiettivo: item.obiettivo
+}));
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'var(--chart-1)'
+  fatturato: {
+    label: 'Fatturato',
+    color: '#14b8a6' // Teal 500
   },
-  mobile: {
-    label: 'Mobile',
-    color: 'var(--chart-2)'
+  obiettivo: {
+    label: 'Obiettivo',
+    color: '#f97316' // Orange 500
   }
 } satisfies ChartConfig;
 
 export function AreaGraph() {
+  // Calculate trend
+  const lastMonth = chartData[chartData.length - 1];
+  const prevMonth = chartData[chartData.length - 2];
+  const trend = ((lastMonth.fatturato - prevMonth.fatturato) / prevMonth.fatturato) * 100;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Dotted Area Chart
-          <Badge variant='outline'>
-            <Icons.trendingUp />
-            -5.2%
+        <CardTitle className='flex items-center gap-2'>
+          Fatturato Mensile
+          <Badge variant={trend >= 0 ? 'default' : 'destructive'} className='gap-1'>
+            {trend >= 0 ? (
+              <Icons.trendingUp className='h-3 w-3' />
+            ) : (
+              <Icons.trendingDown className='h-3 w-3' />
+            )}
+            {trend >= 0 ? '+' : ''}
+            {trend.toFixed(1)}%
           </Badge>
         </CardTitle>
-        <CardDescription>Showing total visitors for the last 6 months</CardDescription>
+        <CardDescription>Andamento fatturato vs obiettivo (ultimi 12 mesi)</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} strokeDasharray='3 3' />
+          <AreaChart
+            accessibilityLayer
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id='fillFatturato' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#14b8a6' stopOpacity={0.3} />
+                <stop offset='95%' stopColor='#14b8a6' stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id='fillObiettivo' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#f97316' stopOpacity={0.1} />
+                <stop offset='95%' stopColor='#f97316' stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='#e7e5e4' />
             <XAxis
               dataKey='month'
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              stroke='#78716c'
+              fontSize={12}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <defs>
-              <DottedBackgroundPattern config={chartConfig} />
-            </defs>
-            <Area
-              dataKey='mobile'
-              type='natural'
-              fill='url(#dotted-background-pattern-mobile)'
-              fillOpacity={0.4}
-              stroke='var(--color-mobile)'
-              stackId='a'
-              strokeWidth={0.8}
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              stroke='#78716c'
+              fontSize={12}
+              tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+            />
+            <ChartTooltip
+              cursor={{ stroke: '#14b8a6', strokeWidth: 1, strokeDasharray: '4 4' }}
+              content={
+                <ChartTooltipContent
+                  formatter={(value) => `€${Number(value).toLocaleString('it-IT')}`}
+                />
+              }
             />
             <Area
-              dataKey='desktop'
-              type='natural'
-              fill='url(#dotted-background-pattern-desktop)'
-              fillOpacity={0.4}
-              stroke='var(--color-desktop)'
-              stackId='a'
-              strokeWidth={0.8}
+              dataKey='obiettivo'
+              type='monotone'
+              stroke='#f97316'
+              strokeWidth={2}
+              fill='url(#fillObiettivo)'
+              strokeDasharray='5 5'
+            />
+            <Area
+              dataKey='fatturato'
+              type='monotone'
+              stroke='#14b8a6'
+              strokeWidth={2}
+              fill='url(#fillFatturato)'
             />
           </AreaChart>
         </ChartContainer>
@@ -91,26 +117,3 @@ export function AreaGraph() {
     </Card>
   );
 }
-
-const DottedBackgroundPattern = ({ config }: { config: ChartConfig }) => {
-  const items = Object.fromEntries(
-    Object.entries(config).map(([key, value]) => [key, value.color])
-  );
-  return (
-    <>
-      {Object.entries(items).map(([key, value]) => (
-        <pattern
-          key={key}
-          id={`dotted-background-pattern-${key}`}
-          x='0'
-          y='0'
-          width='7'
-          height='7'
-          patternUnits='userSpaceOnUse'
-        >
-          <circle cx='5' cy='5' r='1.5' fill={value} opacity={0.5}></circle>
-        </pattern>
-      ))}
-    </>
-  );
-};

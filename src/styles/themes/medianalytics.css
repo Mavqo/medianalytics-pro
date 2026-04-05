@@ -1,0 +1,280 @@
+/* MediAnalytics Pro Theme - Healthcare Dashboard Design System */
+
+[data-theme='medianalytics'] {
+  /* Primary: Teal #14b8a6 */
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --popover: #ffffff;
+  --popover-foreground: #1c1917;
+  --primary: #14b8a6;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f4;
+  --secondary-foreground: #44403c;
+  --muted: #f5f5f4;
+  --muted-foreground: #78716c;
+  --accent: #f97316;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e7e5e4;
+  --input: #e7e5e4;
+  --ring: #14b8a6;
+  --chart-1: #14b8a6;
+  --chart-2: #f97316;
+  --chart-3: #8b5cf6;
+  --chart-4: #22c55e;
+  --chart-5: #0ea5e9;
+  --sidebar: #fafaf9;
+  --sidebar-foreground: #1c1917;
+  --sidebar-primary: #14b8a6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0fdfa;
+  --sidebar-accent-foreground: #0f766e;
+  --sidebar-border: #e7e5e4;
+  --sidebar-ring: #14b8a6;
+
+  /* Font families - using CSS variables from next/font */
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-heading: var(--font-outfit), 'Outfit', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  --font-display: var(--font-display), 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Border radius - larger for modern healthcare feel */
+  --radius: 0.625rem;
+
+  /* Shadows */
+  --shadow-x: 0px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.04;
+  --shadow-color: #1c1917;
+  --shadow-2xs: 0px 1px 2px 0px rgba(28, 25, 23, 0.04);
+  --shadow-xs: 0px 1px 2px 0px rgba(28, 25, 23, 0.04);
+  --shadow-sm: 0px 1px 3px 0px rgba(28, 25, 23, 0.08);
+  --shadow: 0px 1px 3px 0px rgba(28, 25, 23, 0.08);
+  --shadow-md: 0px 4px 12px 0px rgba(28, 25, 23, 0.08);
+  --shadow-lg: 0px 8px 24px 0px rgba(28, 25, 23, 0.12);
+  --shadow-xl: 0px 16px 48px 0px rgba(28, 25, 23, 0.16);
+  --shadow-2xl: 0px 25px 50px -12px rgba(28, 25, 23, 0.25);
+  --shadow-primary: 0px 4px 14px rgba(20, 184, 166, 0.25);
+  --shadow-accent: 0px 4px 14px rgba(249, 115, 22, 0.35);
+
+  /* Tracking */
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+[data-theme='medianalytics'].dark {
+  /* Dark mode palette */
+  --background: #0c0a09;
+  --foreground: #fafaf9;
+  --card: #1c1917;
+  --card-foreground: #fafaf9;
+  --popover: #292524;
+  --popover-foreground: #fafaf9;
+  --primary: #2dd4bf;
+  --primary-foreground: #042f2e;
+  --secondary: #292524;
+  --secondary-foreground: #fafaf9;
+  --muted: #292524;
+  --muted-foreground: #a8a29e;
+  --accent: #fb923c;
+  --accent-foreground: #431407;
+  --destructive: #f87171;
+  --destructive-foreground: #7f1d1d;
+  --border: #44403c;
+  --input: #44403c;
+  --ring: #2dd4bf;
+  --chart-1: #2dd4bf;
+  --chart-2: #fb923c;
+  --chart-3: #a78bfa;
+  --chart-4: #4ade80;
+  --chart-5: #38bdf8;
+  --sidebar: #1c1917;
+  --sidebar-foreground: #fafaf9;
+  --sidebar-primary: #2dd4bf;
+  --sidebar-primary-foreground: #042f2e;
+  --sidebar-accent: #115e59;
+  --sidebar-accent-foreground: #99f6e4;
+  --sidebar-border: #44403c;
+  --sidebar-ring: #2dd4bf;
+
+  /* Font families - same */
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-heading: var(--font-outfit), 'Outfit', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  --font-display: var(--font-display), 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Border radius */
+  --radius: 0.625rem;
+
+  /* Shadows - darker */
+  --shadow-x: 0px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.3;
+  --shadow-color: #000000;
+  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
+  --shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0px 4px 12px 0px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0px 8px 24px 0px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0px 16px 48px 0px rgba(0, 0, 0, 0.6);
+  --shadow-2xl: 0px 25px 50px -12px rgba(0, 0, 0, 0.7);
+  --shadow-primary: 0px 4px 14px rgba(45, 212, 191, 0.3);
+  --shadow-accent: 0px 4px 14px rgba(251, 146, 60, 0.4);
+}
+
+/* Theme inline - Tailwind v4 */
+[data-theme='medianalytics'] {
+  @theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Extended color palette */
+    --color-primary-50: #f0fdfa;
+    --color-primary-100: #ccfbf1;
+    --color-primary-200: #99f6e4;
+    --color-primary-300: #5eead4;
+    --color-primary-400: #2dd4bf;
+    --color-primary-500: #14b8a6;
+    --color-primary-600: #0d9488;
+    --color-primary-700: #0f766e;
+    --color-primary-800: #115e59;
+    --color-primary-900: #134e4a;
+    --color-primary-950: #042f2e;
+
+    --color-secondary-50: #fafaf9;
+    --color-secondary-100: #f5f5f4;
+    --color-secondary-200: #e7e5e4;
+    --color-secondary-300: #d6d3d1;
+    --color-secondary-400: #a8a29e;
+    --color-secondary-500: #78716c;
+    --color-secondary-600: #57534e;
+    --color-secondary-700: #44403c;
+    --color-secondary-800: #292524;
+    --color-secondary-900: #1c1917;
+    --color-secondary-950: #0c0a09;
+
+    --color-accent-50: #fff7ed;
+    --color-accent-100: #ffedd5;
+    --color-accent-200: #fed7aa;
+    --color-accent-300: #fdba74;
+    --color-accent-400: #fb923c;
+    --color-accent-500: #f97316;
+    --color-accent-600: #ea580c;
+    --color-accent-700: #c2410c;
+    --color-accent-800: #9a3412;
+    --color-accent-900: #7c2d12;
+    --color-accent-950: #431407;
+
+    --color-success: #22c55e;
+    --color-success-50: #f0fdf4;
+    --color-success-100: #dcfce7;
+    --color-success-200: #bbf7d0;
+    --color-success-300: #86efac;
+    --color-success-400: #4ade80;
+    --color-success-500: #22c55e;
+    --color-success-600: #16a34a;
+    --color-success-700: #15803d;
+    --color-success-800: #166534;
+    --color-success-900: #14532d;
+
+    --color-warning: #f59e0b;
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: #fcd34d;
+    --color-warning-400: #fbbf24;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+
+    --color-error: #ef4444;
+    --color-error-50: #fef2f2;
+    --color-error-100: #fee2e2;
+    --color-error-200: #fecaca;
+    --color-error-300: #fca5a5;
+    --color-error-400: #f87171;
+    --color-error-500: #ef4444;
+    --color-error-600: #dc2626;
+    --color-error-700: #b91c1c;
+    --color-error-800: #991b1b;
+    --color-error-900: #7f1d1d;
+
+    --color-info: #0ea5e9;
+    --color-info-50: #f0f9ff;
+    --color-info-100: #e0f2fe;
+    --color-info-200: #bae6fd;
+    --color-info-300: #7dd3fc;
+    --color-info-400: #38bdf8;
+    --color-info-500: #0ea5e9;
+    --color-info-600: #0284c7;
+    --color-info-700: #0369a1;
+    --color-info-800: #075985;
+    --color-info-900: #0c4a6e;
+
+    /* Fonts */
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-heading: var(--font-heading);
+    --font-display: var(--font-display);
+
+    /* Border radius */
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+
+    /* Shadows */
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
+    --shadow-primary: var(--shadow-primary);
+    --shadow-accent: var(--shadow-accent);
+  }
+}

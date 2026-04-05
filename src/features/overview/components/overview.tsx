@@ -1,3 +1,5 @@
+'use client';
+
 import PageContainer from '@/components/layout/page-container';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,124 +14,261 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
+import { RadialBarGraph } from './radial-bar-graph';
 import { RecentSales } from './recent-sales';
 import { Icons } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
+import {
+  kpiPrincipali,
+  statisticheGiornaliere,
+  getTotalVisits,
+  metricheRetention
+} from '@/lib/data/analytics';
+import { getActivePatients, patients } from '@/lib/data/patients';
+
+// Format currency
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('it-IT', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0
+  }).format(value);
+};
 
 export default function OverViewPage() {
+  const activePatients = getActivePatients();
+  const totalVisits = getTotalVisits();
+  const obiettivoRaggiunto = kpiPrincipali.percentualeObiettivo >= 100;
+
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col space-y-2'>
-        <div className='flex items-center justify-between space-y-2'>
-          <h2 className='text-2xl font-bold tracking-tight'>Hi, Welcome back 👋</h2>
-          <div className='hidden items-center space-x-2 md:flex'>
-            <Button>Download</Button>
+      <div className='flex flex-1 flex-col space-y-4'>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight text-secondary-900'>
+              Panoramica Centro
+            </h2>
+            <p className='text-muted-foreground'>Benvenuto nel dashboard di MediAnalytics Pro</p>
+          </div>
+          <div className='hidden items-center gap-2 md:flex'>
+            <Button variant='outline' className='gap-2'>
+              <Icons.calendar className='h-4 w-4' />
+              Aprile 2025
+            </Button>
+            <Button className='gap-2 bg-primary hover:bg-primary-700'>
+              <Icons.arrowRight className='h-4 w-4' />
+              Nuovo Appuntamento
+            </Button>
           </div>
         </div>
+
         <Tabs defaultValue='overview' className='space-y-4'>
           <TabsList>
-            <TabsTrigger value='overview'>Overview</TabsTrigger>
-            <TabsTrigger value='analytics' disabled>
-              Analytics
-            </TabsTrigger>
+            <TabsTrigger value='overview'>Panoramica</TabsTrigger>
+            <TabsTrigger value='analytics'>Analytics</TabsTrigger>
+            <TabsTrigger value='reports'>Report</TabsTrigger>
           </TabsList>
+
           <TabsContent value='overview' className='space-y-4'>
-            <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4'>
-              <Card className='@container/card'>
-                <CardHeader>
-                  <CardDescription>Total Revenue</CardDescription>
-                  <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    $1,250.00
+            {/* KPI Cards */}
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {/* Fatturato Card */}
+              <Card className='border-l-4 border-l-primary'>
+                <CardHeader className='pb-2'>
+                  <CardDescription className='text-secondary-600'>
+                    Fatturato Mensile
+                  </CardDescription>
+                  <CardTitle className='text-2xl font-bold text-secondary-900'>
+                    {formatCurrency(kpiPrincipali.fatturatoMeseCorrente)}
                   </CardTitle>
                   <CardAction>
-                    <Badge variant='outline'>
-                      <Icons.trendingUp />
-                      +12.5%
+                    <Badge
+                      variant={kpiPrincipali.variazioneFatturato >= 0 ? 'default' : 'destructive'}
+                      className={kpiPrincipali.variazioneFatturato >= 0 ? 'bg-primary' : ''}
+                    >
+                      {kpiPrincipali.variazioneFatturato >= 0 ? (
+                        <Icons.trendingUp className='mr-1 h-3 w-3' />
+                      ) : (
+                        <Icons.trendingDown className='mr-1 h-3 w-3' />
+                      )}
+                      {kpiPrincipali.variazioneFatturato >= 0 ? '+' : ''}
+                      {kpiPrincipali.variazioneFatturato}%
                     </Badge>
                   </CardAction>
                 </CardHeader>
-                <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Trending up this month <Icons.trendingUp className='size-4' />
-                  </div>
-                  <div className='text-muted-foreground'>Visitors for the last 6 months</div>
+                <CardFooter className='pt-0'>
+                  <p className='text-xs text-muted-foreground'>
+                    vs {formatCurrency(kpiPrincipali.fatturatoMesePrecedente)} mese precedente
+                  </p>
                 </CardFooter>
               </Card>
-              <Card className='@container/card'>
-                <CardHeader>
-                  <CardDescription>New Customers</CardDescription>
-                  <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    1,234
+
+              {/* Pazienti Attivi Card */}
+              <Card className='border-l-4 border-l-primary'>
+                <CardHeader className='pb-2'>
+                  <CardDescription className='text-secondary-600'>Pazienti Attivi</CardDescription>
+                  <CardTitle className='text-2xl font-bold text-secondary-900'>
+                    {activePatients.length}
                   </CardTitle>
                   <CardAction>
-                    <Badge variant='outline'>
-                      <Icons.trendingDown />
-                      -20%
+                    <Badge variant='outline' className='border-primary text-primary'>
+                      <Icons.users className='mr-1 h-3 w-3' />
+                      {patients.length} totali
                     </Badge>
                   </CardAction>
                 </CardHeader>
-                <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Down 20% this period <Icons.trendingDown className='size-4' />
-                  </div>
-                  <div className='text-muted-foreground'>Acquisition needs attention</div>
+                <CardFooter className='pt-0'>
+                  <p className='text-xs text-muted-foreground'>
+                    {statisticheGiornaliere.pazientiNuoviQuestaSettimana} nuovi questa settimana
+                  </p>
                 </CardFooter>
               </Card>
-              <Card className='@container/card'>
-                <CardHeader>
-                  <CardDescription>Active Accounts</CardDescription>
-                  <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    45,678
+
+              {/* Appuntamenti Card */}
+              <Card className='border-l-4 border-l-accent'>
+                <CardHeader className='pb-2'>
+                  <CardDescription className='text-secondary-600'>
+                    Appuntamenti Oggi
+                  </CardDescription>
+                  <CardTitle className='text-2xl font-bold text-secondary-900'>
+                    {statisticheGiornaliere.appuntamentiOggi}
                   </CardTitle>
                   <CardAction>
-                    <Badge variant='outline'>
-                      <Icons.trendingUp />
-                      +12.5%
+                    <Badge variant='outline' className='border-accent text-accent-600'>
+                      <Icons.calendar className='mr-1 h-3 w-3' />+
+                      {statisticheGiornaliere.appuntamentiDomani} domani
                     </Badge>
                   </CardAction>
                 </CardHeader>
-                <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Strong user retention <Icons.trendingUp className='size-4' />
-                  </div>
-                  <div className='text-muted-foreground'>Engagement exceed targets</div>
+                <CardFooter className='pt-0'>
+                  <p className='text-xs text-muted-foreground'>
+                    Tasso completamento: {statisticheGiornaliere.tassoCompletamento}%
+                  </p>
                 </CardFooter>
               </Card>
-              <Card className='@container/card'>
-                <CardHeader>
-                  <CardDescription>Growth Rate</CardDescription>
-                  <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                    4.5%
+
+              {/* Tasso Retention Card */}
+              <Card className='border-l-4 border-l-accent'>
+                <CardHeader className='pb-2'>
+                  <CardDescription className='text-secondary-600'>Tasso Retention</CardDescription>
+                  <CardTitle className='text-2xl font-bold text-secondary-900'>
+                    {metricheRetention.tassoRetention}%
                   </CardTitle>
                   <CardAction>
-                    <Badge variant='outline'>
-                      <Icons.trendingUp />
-                      +4.5%
+                    <Badge
+                      variant={obiettivoRaggiunto ? 'default' : 'outline'}
+                      className={
+                        obiettivoRaggiunto ? 'bg-primary' : 'border-accent text-accent-600'
+                      }
+                    >
+                      <Icons.check className='mr-1 h-3 w-3' />
+                      {metricheRetention.visiteMediePerPaziente} visite/pz
                     </Badge>
                   </CardAction>
                 </CardHeader>
-                <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-                  <div className='line-clamp-1 flex gap-2 font-medium'>
-                    Steady performance increase <Icons.trendingUp className='size-4' />
-                  </div>
-                  <div className='text-muted-foreground'>Meets growth projections</div>
+                <CardFooter className='pt-0'>
+                  <p className='text-xs text-muted-foreground'>
+                    Valore lifetime medio: {formatCurrency(metricheRetention.valoreLifetimeMedio)}
+                  </p>
                 </CardFooter>
               </Card>
             </div>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7'>
+
+            {/* Charts Grid */}
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <div className='col-span-4'>
                 <BarGraph />
               </div>
-              <Card className='col-span-4 md:col-span-3'>
-                <RecentSales />
-              </Card>
+              <div className='col-span-4 lg:col-span-3'>
+                <RadialBarGraph />
+              </div>
               <div className='col-span-4'>
                 <AreaGraph />
               </div>
-              <div className='col-span-4 md:col-span-3'>
+              <div className='col-span-4 lg:col-span-3'>
                 <PieGraph />
               </div>
             </div>
+
+            {/* Recent Activity */}
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+              <Card>
+                <RecentSales />
+              </Card>
+              <Card className='p-6'>
+                <h3 className='font-semibold mb-4'>Prossimi Appuntamenti</h3>
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
+                    <div className='flex items-center gap-3'>
+                      <div className='w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center'>
+                        <Icons.user className='h-5 w-5 text-primary' />
+                      </div>
+                      <div>
+                        <p className='font-medium text-sm'>Giuseppe Marino</p>
+                        <p className='text-xs text-muted-foreground'>Riabilitazione spalla</p>
+                      </div>
+                    </div>
+                    <div className='text-right'>
+                      <p className='text-sm font-medium'>09:30</p>
+                      <p className='text-xs text-muted-foreground'>Oggi</p>
+                    </div>
+                  </div>
+                  <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
+                    <div className='flex items-center gap-3'>
+                      <div className='w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center'>
+                        <Icons.user className='h-5 w-5 text-primary' />
+                      </div>
+                      <div>
+                        <p className='font-medium text-sm'>Valentina Ferrari</p>
+                        <p className='text-xs text-muted-foreground'>Massaggio sportivo</p>
+                      </div>
+                    </div>
+                    <div className='text-right'>
+                      <p className='text-sm font-medium'>18:00</p>
+                      <p className='text-xs text-muted-foreground'>Oggi</p>
+                    </div>
+                  </div>
+                  <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
+                    <div className='flex items-center gap-3'>
+                      <div className='w-10 h-10 rounded-full bg-accent-100 flex items-center justify-center'>
+                        <Icons.user className='h-5 w-5 text-accent-600' />
+                      </div>
+                      <div>
+                        <p className='font-medium text-sm'>Giulia Bianchi</p>
+                        <p className='text-xs text-muted-foreground'>Rieducazione sportiva</p>
+                      </div>
+                    </div>
+                    <div className='text-right'>
+                      <p className='text-sm font-medium'>10:30</p>
+                      <p className='text-xs text-muted-foreground'>Domani</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value='analytics' className='space-y-4'>
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+              <AreaGraph />
+              <BarGraph />
+            </div>
+          </TabsContent>
+
+          <TabsContent value='reports' className='space-y-4'>
+            <Card className='p-8'>
+              <div className='text-center'>
+                <Icons.file className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
+                <h3 className='text-lg font-semibold mb-2'>Report Mensile</h3>
+                <p className='text-muted-foreground mb-4'>
+                  Genera e scarica il report completo del mese
+                </p>
+                <Button className='gap-2'>
+                  <Icons.arrowRight className='h-4 w-4' />
+                  Genera Report
+                </Button>
+              </div>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

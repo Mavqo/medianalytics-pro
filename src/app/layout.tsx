@@ -11,13 +11,13 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import '../styles/globals.css';
 
 const META_THEME_COLORS = {
-  light: '#ffffff',
-  dark: '#09090b'
+  light: '#fafaf9',
+  dark: '#0c0a09'
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'MediAnalytics Pro',
+  description: 'Dashboard professionale per centri fisioterapia e benessere'
 };
 
 export const viewport: Viewport = {

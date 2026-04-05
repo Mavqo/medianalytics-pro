@@ -12,6 +12,7 @@ import {
   Playfair_Display,
   Noto_Sans_Mono,
   Outfit,
+  Plus_Jakarta_Sans,
   Space_Mono
 } from 'next/font/google';
 
@@ -68,6 +69,11 @@ const fontOutfit = Outfit({
   variable: '--font-outfit'
 });
 
+const fontPlusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-display'
+});
+
 const fontSpaceMono = Space_Mono({
   subsets: ['latin'],
   weight: ['400', '700'],
@@ -104,5 +110,6 @@ export const fontVariables = cn(
   fontSpaceMono.variable,
   fontJetBrainsMono.variable,
   fontMerriweather.variable,
-  fontPlayfairDisplay.variable
+  fontPlayfairDisplay.variable,
+  fontPlusJakartaSans.variable
 );

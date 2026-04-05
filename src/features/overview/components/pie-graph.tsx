@@ -1,6 +1,6 @@
 'use client';
 
-import { LabelList, Pie, PieChart } from 'recharts';
+import { Pie, PieChart, Cell, Legend } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,78 +11,102 @@ import {
 } from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
+import { patients } from '@/lib/data/patients';
 
-const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 187, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 90, fill: 'var(--color-other)' }
+// Calculate age distribution from patients data
+const calculateAgeDistribution = () => {
+  const ranges = [
+    { range: '18-30', min: 18, max: 30, count: 0 },
+    { range: '31-40', min: 31, max: 40, count: 0 },
+    { range: '41-50', min: 41, max: 50, count: 0 },
+    { range: '51-60', min: 51, max: 60, count: 0 },
+    { range: '60+', min: 60, max: 200, count: 0 }
+  ];
+
+  patients.forEach((patient) => {
+    const age = patient.età;
+    const range = ranges.find((r) => age >= r.min && age <= r.max);
+    if (range) range.count++;
+  });
+
+  return ranges.map((r) => ({
+    name: r.range,
+    value: r.count,
+    label: `${r.range} anni`
+  }));
+};
+
+const chartData = calculateAgeDistribution();
+
+// MediAnalytics color palette
+const COLORS = [
+  '#14b8a6', // Teal 500
+  '#0d9488', // Teal 600
+  '#f97316', // Orange 500
+  '#fb923c', // Orange 400
+  '#78716c' // Stone 500
 ];
 
 const chartConfig = {
-  visitors: {
-    label: 'Visitors'
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'var(--chart-1)'
-  },
-  safari: {
-    label: 'Safari',
-    color: 'var(--chart-2)'
-  },
-  firefox: {
-    label: 'Firefox',
-    color: 'var(--chart-3)'
-  },
-  edge: {
-    label: 'Edge',
-    color: 'var(--chart-4)'
-  },
-  other: {
-    label: 'Other',
-    color: 'var(--chart-5)'
+  value: {
+    label: 'Pazienti'
   }
 } satisfies ChartConfig;
 
 export function PieGraph() {
+  const totalPatients = patients.length;
+  const topGroup = chartData.reduce((max, curr) => (curr.value > max.value ? curr : max));
+
   return (
     <Card className='flex h-full flex-col'>
       <CardHeader className='items-center pb-0'>
-        <CardTitle>
-          Pie Chart
-          <Badge variant='outline'>
-            <Icons.trendingUp />
-            +5.2%
+        <CardTitle className='flex items-center gap-2'>
+          Distribuzione Pazienti
+          <Badge variant='outline' className='gap-1 border-primary text-primary'>
+            <Icons.users className='h-3 w-3' />
+            {totalPatients}
           </Badge>
         </CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Per fascia età - Gruppo principale: {topGroup.name}</CardDescription>
       </CardHeader>
       <CardContent className='flex flex-1 items-center justify-center pb-0'>
         <ChartContainer
           config={chartConfig}
-          className='[&_.recharts-text]:fill-background mx-auto aspect-square max-h-[300px] min-h-[250px]'
+          className='mx-auto aspect-square max-h-[300px] min-h-[250px]'
         >
           <PieChart>
-            <ChartTooltip content={<ChartTooltipContent nameKey='visitors' hideLabel />} />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  formatter={(value, name, props) => {
+                    const numValue = Number(value);
+                    const percentage = ((numValue / totalPatients) * 100).toFixed(1);
+                    return [`${numValue} pazienti (${percentage}%)`, props?.payload?.name];
+                  }}
+                />
+              }
+            />
             <Pie
               data={chartData}
-              innerRadius={30}
-              dataKey='visitors'
-              radius={10}
-              cornerRadius={8}
-              paddingAngle={4}
+              dataKey='value'
+              nameKey='name'
+              innerRadius={50}
+              outerRadius={90}
+              paddingAngle={3}
+              cornerRadius={6}
             >
-              <LabelList
-                dataKey='visitors'
-                stroke='none'
-                fontSize={12}
-                fontWeight={500}
-                fill='currentColor'
-                formatter={(value: number) => value.toString()}
-              />
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
             </Pie>
+            <Legend
+              verticalAlign='bottom'
+              height={36}
+              iconType='circle'
+              formatter={(value: string, entry: any) => (
+                <span style={{ color: entry.color, fontSize: '12px' }}>{value}</span>
+              )}
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

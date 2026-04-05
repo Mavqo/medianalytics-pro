@@ -10,6 +10,7 @@ import {
   IconBrandTwitter,
   IconBrightness,
   IconCalendar,
+  IconChartBar,
   IconCheck,
   IconChecks,
   IconChevronDown,
@@ -41,7 +42,9 @@ import {
   IconFileTypeXls,
   IconFileZip,
   IconFolder,
+  IconGift,
   IconGripVertical,
+  IconHeartRateMonitor,
   IconHelpCircle,
   IconInfoCircle,
   IconItalic,
@@ -52,6 +55,7 @@ import {
   IconLock,
   IconLogin,
   IconLogout,
+  IconMedicalCross,
   IconMessage,
   IconMinus,
   IconMoon,
@@ -77,6 +81,7 @@ import {
   IconTrash,
   IconTrendingDown,
   IconTrendingUp,
+  IconTrophy,
   IconTypography,
   IconUnderline,
   IconUpload,
@@ -135,6 +140,7 @@ export const Icons = {
   profile: IconUser,
   employee: IconUserX,
   userPen: IconUserEdit,
+  users: IconUsers,
   teams: IconUsers,
 
   // Brand
@@ -152,7 +158,9 @@ export const Icons = {
 
   // Files
   page: IconFile,
+  file: IconFile,
   post: IconFileText,
+  fileText: IconFileText,
   fileTypePdf: IconFileTypePdf,
   fileTypeDoc: IconFileTypeDoc,
   fileTypeXls: IconFileTypeXls,
@@ -162,6 +170,7 @@ export const Icons = {
 
   // Actions
   add: IconPlus,
+  plus: IconPlus,
   edit: IconEdit,
   upload: IconUpload,
   share: IconShare,
@@ -187,8 +196,10 @@ export const Icons = {
   billing: IconCreditCard,
   creditCard: IconCreditCard,
   product: IconBox,
+  box: IconBox,
   pro: IconCrown,
   exclusive: IconStar,
+  star: IconStar,
   sparkles: IconSparkles,
   badgeCheck: IconRosetteDiscountCheck,
   lock: IconLock,
@@ -212,5 +223,12 @@ export const Icons = {
   slash: IconSlash,
   calendar: IconCalendar,
   galleryVerticalEnd: IconStack2,
-  moreHorizontal: IconDots
+  moreHorizontal: IconDots,
+
+  // Healthcare
+  health: IconMedicalCross,
+  heartMonitor: IconHeartRateMonitor,
+  chart: IconChartBar,
+  gift: IconGift,
+  trophy: IconTrophy
 };

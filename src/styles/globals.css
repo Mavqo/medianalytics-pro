@@ -75,3 +75,44 @@
   /* Apply the reveal animation */
   animation: reveal 0.4s ease-in-out forwards;
 }
+
+/* MediAnalytics Pro - Custom utility classes */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Font family utilities */
+  .font-heading {
+    font-family: var(--font-outfit), 'Outfit', system-ui, sans-serif;
+  }
+
+  .font-display {
+    font-family: var(--font-display), 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  /* Shadow utilities */
+  .shadow-primary {
+    box-shadow: 0px 4px 14px rgba(20, 184, 166, 0.25);
+  }
+
+  .shadow-primary-hover {
+    box-shadow: 0px 6px 20px rgba(20, 184, 166, 0.35);
+  }
+
+  .shadow-accent {
+    box-shadow: 0px 4px 14px rgba(249, 115, 22, 0.35);
+  }
+
+  .shadow-accent-hover {
+    box-shadow: 0px 6px 20px rgba(249, 115, 22, 0.45);
+  }
+
+  .shadow-input-focus {
+    box-shadow: 0px 0px 0px 4px rgba(20, 184, 166, 0.1);
+  }
+
+  .shadow-error-focus {
+    box-shadow: 0px 0px 0px 4px rgba(239, 68, 68, 0.1);
+  }
+}

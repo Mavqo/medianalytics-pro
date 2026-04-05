@@ -1,142 +1,76 @@
 import { NavGroup } from '@/types';
 
 /**
- * Navigation configuration with RBAC support
- *
- * This configuration is used for both the sidebar navigation and Cmd+K bar.
- * Items are organized into groups, each rendered with a SidebarGroupLabel.
- *
- * RBAC Access Control:
- * Each navigation item can have an `access` property that controls visibility
- * based on permissions, plans, features, roles, and organization context.
- *
- * Examples:
- *
- * 1. Require organization:
- *    access: { requireOrg: true }
- *
- * 2. Require specific permission:
- *    access: { requireOrg: true, permission: 'org:teams:manage' }
- *
- * 3. Require specific plan:
- *    access: { plan: 'pro' }
- *
- * 4. Require specific feature:
- *    access: { feature: 'premium_access' }
- *
- * 5. Require specific role:
- *    access: { role: 'admin' }
- *
- * 6. Multiple conditions (all must be true):
- *    access: { requireOrg: true, permission: 'org:teams:manage', plan: 'pro' }
- *
- * Note: The `visible` function is deprecated but still supported for backward compatibility.
- * Use the `access` property for new items.
+ * Navigation configuration for MediAnalytics Pro
+ * Healthcare Dashboard Navigation
  */
 export const navGroups: NavGroup[] = [
   {
-    label: 'Overview',
+    label: 'Centro',
     items: [
       {
-        title: 'Dashboard',
+        title: 'Panoramica',
         url: '/dashboard/overview',
         icon: 'dashboard',
         isActive: false,
-        shortcut: ['d', 'd'],
-        items: []
-      },
-      {
-        title: 'Workspaces',
-        url: '/dashboard/workspaces',
-        icon: 'workspace',
-        isActive: false,
-        items: []
-      },
-      {
-        title: 'Teams',
-        url: '/dashboard/workspaces/team',
-        icon: 'teams',
-        isActive: false,
-        items: [],
-        access: { requireOrg: true }
-      },
-      {
-        title: 'Product',
-        url: '/dashboard/product',
-        icon: 'product',
         shortcut: ['p', 'p'],
-        isActive: false,
         items: []
       },
       {
-        title: 'Users',
-        url: '/dashboard/users',
-        icon: 'teams',
-        shortcut: ['u', 'u'],
+        title: 'Pazienti',
+        url: '/dashboard/pazienti',
+        icon: 'users',
         isActive: false,
+        shortcut: ['z', 'z'],
         items: []
       },
       {
-        title: 'Kanban',
-        url: '/dashboard/kanban',
-        icon: 'kanban',
-        shortcut: ['k', 'k'],
+        title: 'Appuntamenti',
+        url: '/dashboard/appointments',
+        icon: 'calendar',
         isActive: false,
+        shortcut: ['a', 'a'],
         items: []
       },
       {
-        title: 'Chat',
-        url: '/dashboard/chat',
-        icon: 'chat',
-        shortcut: ['c', 'c'],
+        title: 'Fatturazione',
+        url: '/dashboard/billing',
+        icon: 'creditCard',
         isActive: false,
+        shortcut: ['f', 'f'],
+        items: []
+      },
+      {
+        title: 'Analytics',
+        url: '/dashboard/analytics',
+        icon: 'chart',
+        isActive: false,
+        shortcut: ['n', 'n'],
         items: []
       }
     ]
   },
   {
-    label: 'Elements',
+    label: 'Gestione',
     items: [
       {
-        title: 'Forms',
-        url: '#',
-        icon: 'forms',
-        isActive: true,
-        items: [
-          {
-            title: 'Basic Form',
-            url: '/dashboard/forms/basic',
-            icon: 'forms',
-            shortcut: ['f', 'f']
-          },
-          {
-            title: 'Multi-Step Form',
-            url: '/dashboard/forms/multi-step',
-            icon: 'forms'
-          },
-          {
-            title: 'Sheet & Dialog',
-            url: '/dashboard/forms/sheet-form',
-            icon: 'forms'
-          },
-          {
-            title: 'Advanced Patterns',
-            url: '/dashboard/forms/advanced',
-            icon: 'forms'
-          }
-        ]
-      },
-      {
-        title: 'React Query',
-        url: '/dashboard/react-query',
-        icon: 'code',
+        title: 'Terapeuti',
+        url: '/dashboard/therapists',
+        icon: 'employee',
         isActive: false,
         items: []
       },
       {
-        title: 'Icons',
-        url: '/dashboard/elements/icons',
-        icon: 'palette',
+        title: 'Trattamenti',
+        url: '/dashboard/treatments',
+        icon: 'health',
+        isActive: false,
+        items: []
+      },
+      {
+        title: 'Inventario',
+        url: '/dashboard/inventory',
+        icon: 'box',
         isActive: false,
         items: []
       }
@@ -146,49 +80,34 @@ export const navGroups: NavGroup[] = [
     label: '',
     items: [
       {
-        title: 'Pro',
-        url: '#',
-        icon: 'pro',
-        isActive: true,
-        items: [
-          {
-            title: 'Exclusive',
-            url: '/dashboard/exclusive',
-            icon: 'exclusive',
-            shortcut: ['e', 'e']
-          }
-        ]
-      },
-      {
         title: 'Account',
         url: '#',
         icon: 'account',
         isActive: true,
         items: [
           {
-            title: 'Profile',
+            title: 'Profilo',
             url: '/dashboard/profile',
             icon: 'profile',
             shortcut: ['m', 'm']
           },
           {
-            title: 'Notifications',
+            title: 'Notifiche',
             url: '/dashboard/notifications',
             icon: 'notification',
-            shortcut: ['n', 'n']
+            shortcut: ['t', 't']
           },
           {
-            title: 'Billing',
-            url: '/dashboard/billing',
-            icon: 'billing',
-            shortcut: ['b', 'b'],
-            access: { requireOrg: true }
+            title: 'Impostazioni',
+            url: '/dashboard/settings',
+            icon: 'settings',
+            shortcut: ['i', 'i']
           },
           {
-            title: 'Login',
+            title: 'Logout',
             shortcut: ['l', 'l'],
-            url: '/',
-            icon: 'login'
+            url: '/auth/sign-in',
+            icon: 'logout'
           }
         ]
       }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Bar, BarChart, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,134 +11,86 @@ import {
 } from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
+import { visitePerTipo } from '@/lib/data/analytics';
 
-const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 }
-];
+// Transform data for chart
+const chartData = visitePerTipo.map((item) => ({
+  tipo: item.tipo,
+  visite: item.visite,
+  fatturato: item.fatturato
+}));
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'var(--chart-1)'
+  visite: {
+    label: 'Visite',
+    color: '#14b8a6' // Teal 500
   },
-  mobile: {
-    label: 'Mobile',
-    color: 'var(--chart-2)'
+  fatturato: {
+    label: 'Fatturato (€)',
+    color: '#f97316' // Orange 500
   }
 } satisfies ChartConfig;
 
 export function BarGraph() {
+  const totalVisits = chartData.reduce((acc, curr) => acc + curr.visite, 0);
+  const topTreatment = chartData.reduce((max, curr) => (curr.visite > max.visite ? curr : max));
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Bar Chart - Multiple
-          <Badge variant='outline'>
-            <Icons.trendingDown />
-            -5.2%
+        <CardTitle className='flex items-center gap-2'>
+          Visite per Tipo Trattamento
+          <Badge variant='outline' className='gap-1 border-primary text-primary'>
+            <Icons.trendingUp className='h-3 w-3' />
+            {totalVisits} visite
           </Badge>
         </CardTitle>
-        <CardDescription>January - June 2025</CardDescription>
+        <CardDescription>
+          Top: {topTreatment.tipo} ({topTreatment.visite} visite)
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <rect
-              x='0'
-              y='0'
-              width='100%'
-              height='85%'
-              fill='url(#default-multiple-pattern-dots)'
-            />
-            <defs>
-              <DottedBackgroundPattern />
-            </defs>
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
+          >
+            <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='#e7e5e4' />
             <XAxis
-              dataKey='month'
+              dataKey='tipo'
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              stroke='#78716c'
+              fontSize={11}
+              angle={-15}
+              textAnchor='end'
+              height={60}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              stroke='#78716c'
+              fontSize={12}
             />
             <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator='dashed' hideLabel />}
+              cursor={{ fill: 'rgba(20, 184, 166, 0.1)' }}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  formatter={(value, name) => [
+                    name === 'fatturato' ? `€${Number(value).toLocaleString('it-IT')}` : value,
+                    name === 'fatturato' ? 'Fatturato' : 'Visite'
+                  ]}
+                />
+              }
             />
-            <Bar
-              dataKey='desktop'
-              color='var(--chart-1)'
-              fill='var(--color-desktop)'
-              shape={<CustomHatchedBar isHatched={false} />}
-              radius={4}
-            />
-            <Bar
-              dataKey='mobile'
-              fill='var(--color-mobile)'
-              shape={<CustomHatchedBar />}
-              radius={4}
-            />
+            <Bar dataKey='visite' fill='#14b8a6' radius={[6, 6, 0, 0]} maxBarSize={60} />
           </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
 }
-
-const CustomHatchedBar = (
-  props: React.SVGProps<SVGRectElement> & {
-    dataKey?: string;
-    isHatched?: boolean;
-  }
-) => {
-  const { fill, x, y, width, height, dataKey } = props;
-
-  const isHatched = props.isHatched ?? true;
-
-  return (
-    <>
-      <rect
-        rx={4}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        stroke='none'
-        fill={isHatched ? `url(#hatched-bar-pattern-${dataKey})` : fill}
-      />
-      <defs>
-        <pattern
-          key={dataKey}
-          id={`hatched-bar-pattern-${dataKey}`}
-          x='0'
-          y='0'
-          width='5'
-          height='5'
-          patternUnits='userSpaceOnUse'
-          patternTransform='rotate(-45)'
-        >
-          <rect width='10' height='10' opacity={0.5} fill={fill}></rect>
-          <rect width='1' height='10' fill={fill}></rect>
-        </pattern>
-      </defs>
-    </>
-  );
-};
-const DottedBackgroundPattern = () => {
-  return (
-    <pattern
-      id='default-multiple-pattern-dots'
-      x='0'
-      y='0'
-      width='10'
-      height='10'
-      patternUnits='userSpaceOnUse'
-    >
-      <circle className='dark:text-muted/40 text-muted' cx='2' cy='2' r='1' fill='currentColor' />
-    </pattern>
-  );
-};

@@ -6,24 +6,30 @@ import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        default:
+          'bg-primary text-primary-foreground shadow-sm hover:bg-primary-600 hover:shadow-primary active:bg-primary-700',
         destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+          'bg-error text-white shadow-sm hover:bg-error-600 active:bg-error-700 focus-visible:ring-error/50',
         outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline'
+          'border-[1.5px] border-secondary-200 bg-white text-secondary-700 shadow-sm hover:bg-secondary-50 hover:border-secondary-300 active:bg-secondary-100',
+        secondary:
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary-100 active:bg-secondary-200',
+        ghost: 'text-primary hover:bg-primary-50 hover:text-primary-700 active:bg-primary-100',
+        link: 'text-primary underline-offset-4 hover:underline',
+        accent:
+          'bg-accent text-white shadow-accent hover:bg-accent-600 hover:shadow-accent-hover active:bg-accent-700 font-semibold'
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'size-9'
+        default: 'h-10 px-5 py-2.5 text-sm',
+        xs: 'h-7 px-3 py-1.5 text-xs',
+        sm: 'h-8 px-4 py-2 text-[13px]',
+        lg: 'h-12 px-6 py-3 text-[15px]',
+        xl: 'h-14 px-8 py-4 text-base',
+        icon: 'size-10'
       }
     },
     defaultVariants: {

@@ -9,6 +9,7 @@
 @import './themes/zen.css';
 @import './themes/astro-vista.css';
 @import './themes/whatsapp.css';
+@import './themes/medianalytics.css';
 
 body {
   @apply overscroll-none;
@@ -30,4 +31,18 @@ body {
   --font-serif: initial;
   /* Apply font-family - will now resolve from html's [data-theme] variables */
   font-family: var(--font-sans);
+}
+
+/* MediAnalytics specific font styling */
+[data-theme='medianalytics'] h1,
+[data-theme='medianalytics'] h2,
+[data-theme='medianalytics'] h3,
+[data-theme='medianalytics'] h4,
+[data-theme='medianalytics'] h5,
+[data-theme='medianalytics'] h6 {
+  font-family: var(--font-heading);
+}
+
+[data-theme='medianalytics'] .font-display {
+  font-family: var(--font-display);
 }
