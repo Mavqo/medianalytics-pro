@@ -71,6 +71,8 @@ export default function PazientiPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [treatmentFilter, setTreatmentFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Get unique treatment types
   const treatmentTypes = useMemo(() => {
@@ -94,6 +96,19 @@ export default function PazientiPage() {
       return matchesSearch && matchesStatus && matchesTreatment;
     });
   }, [searchTerm, statusFilter, treatmentFilter]);
+
+  // Reset to first page when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, treatmentFilter]);
+
+  // Calculate paginated patients
+  const paginatedPatients = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredPatients.slice(start, start + rowsPerPage);
+  }, [filteredPatients, currentPage, rowsPerPage]);
+
+  const totalPages = Math.ceil(filteredPatients.length / rowsPerPage);
 
   // Export data preparation
   const exportData = useMemo(() => {
@@ -210,7 +225,7 @@ export default function PazientiPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredPatients.length === 0 ? (
+                  {paginatedPatients.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className='text-center py-8 text-muted-foreground'>
                         <Icons.search className='h-8 w-8 mx-auto mb-2 opacity-50' />
@@ -218,7 +233,7 @@ export default function PazientiPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredPatients.map((patient) => (
+                    paginatedPatients.map((patient) => (
                       <TableRow key={patient.id} className='hover:bg-secondary-50'>
                         <TableCell>
                           <div className='flex items-center gap-3'>
@@ -267,6 +282,72 @@ export default function PazientiPage() {
                 </TableBody>
               </Table>
             </div>
+
+            {/* Pagination */}
+            {filteredPatients.length > 0 && (
+              <div className='flex items-center justify-between px-6 py-4 border-t border-secondary-100'>
+                <div className='text-sm text-muted-foreground'>
+                  Mostrando {(currentPage - 1) * rowsPerPage + 1}-
+                  {Math.min(currentPage * rowsPerPage, filteredPatients.length)} di{' '}
+                  {filteredPatients.length} pazienti
+                </div>
+                <div className='flex items-center gap-4'>
+                  <Select
+                    value={rowsPerPage.toString()}
+                    onValueChange={(v) => {
+                      setRowsPerPage(Number(v));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <SelectTrigger className='w-[70px]'>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='10'>10</SelectItem>
+                      <SelectItem value='25'>25</SelectItem>
+                      <SelectItem value='50'>50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className='flex items-center gap-1'>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => setCurrentPage(1)}
+                      disabled={currentPage === 1}
+                    >
+                      Prima
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => setCurrentPage((p) => p - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      Precedente
+                    </Button>
+                    <span className='px-3 py-1 text-sm'>
+                      Pagina {currentPage} di {totalPages}
+                    </span>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => setCurrentPage((p) => p + 1)}
+                      disabled={currentPage >= totalPages}
+                    >
+                      Successiva
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => setCurrentPage(totalPages)}
+                      disabled={currentPage >= totalPages}
+                    >
+                      Ultima
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
