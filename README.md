@@ -1,24 +1,24 @@
 # MediAnalytics Pro
 
-Dashboard professionale per **centri fisioterapia e benessere**, pensata per mostrare in modo chiaro pazienti, appuntamenti, trend operativi e overview economica.
+Professional dashboard concept for **physiotherapy and wellness centers**, designed to present patients, appointments, operational trends, and business insights in a structured and credible way.
 
-Il progetto nasce come base di prodotto per una web app gestionale verticale: non un semplice backoffice generico, ma un'interfaccia orientata a realta' che lavorano con trattamenti, terapisti, pianificazione e controllo dei dati.
+The project is positioned as a vertical product prototype rather than a generic admin panel. It is meant to support clinics and wellness teams that need a clearer interface for daily operations, data overview, and service management.
 
-## Obiettivo
+## Project Goal
 
-Mettere insieme un prototipo credibile e ben presentato per un software dedicato a studi e centri wellness, con attenzione a UX, leggibilita' e scalabilita' dell'interfaccia.
+Build a strong frontend foundation for a healthcare-oriented dashboard that can be used for product demos, concept validation, and future development into a full internal platform or SaaS product.
 
-## Cosa include
+## What It Includes
 
-- dashboard overview con KPI e grafici
-- sezione pazienti con dati, stato e ricerca
-- gestione appuntamenti
-- aree dedicate a billing, analytics, terapisti, trattamenti e inventario
-- notifiche e navigazione strutturata
-- tema visuale personalizzato `medianalytics`
-- layout responsive pensato per desktop e tablet
+- overview dashboard with KPIs and charts
+- patient management views with status and search
+- appointment-focused sections
+- dedicated areas for billing, analytics, therapists, treatments, and inventory
+- notification flows and structured navigation
+- custom visual theme tailored to the MediAnalytics identity
+- responsive layout designed for desktop-first operational use
 
-## Stack
+## Tech Stack
 
 - `Next.js 16`
 - `React 19`
@@ -28,52 +28,53 @@ Mettere insieme un prototipo credibile e ben presentato per un software dedicato
 - `Recharts`
 - `Zustand`
 
-## Stato del progetto
+## Current Scope
 
-Attualmente il repository rappresenta soprattutto il **frontend/prototipo avanzato** del prodotto, con dati demo e struttura pronta per essere collegata a servizi reali.
+At the moment, the repository mainly represents an advanced frontend prototype with realistic demo data and a UI structure ready to be connected to production services later on.
 
-E' utile per:
+It works well for:
 
-- demo commerciali
-- validazione del concept
-- evoluzione verso una dashboard SaaS o gestionale interno
+- product presentations
+- portfolio positioning
+- early-stage feature validation
+- future evolution into a clinic operations dashboard
 
-## Avvio locale
+## Local Development
 
-Con `npm`:
+With `npm`:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Con `bun`:
+With `bun`:
 
 ```bash
 bun install
 bun run dev
 ```
 
-Build produzione:
+Production build:
 
 ```bash
 npm run build
 npm run start
 ```
 
-## Struttura del progetto
+## Project Structure
 
 ```text
 src/
-├── app/              Routing e pagine Next.js
-├── components/       UI condivisa e layout
-├── config/           Navigazione e configurazioni dashboard
-├── features/         Moduli per overview, utenti, notifiche, auth
-├── lib/              Utility e dati demo
-├── styles/           Tema globale e varianti visuali
-└── hooks/            Hook custom
+├── app/              Next.js routing and pages
+├── components/       Shared UI and layout components
+├── config/           Navigation and dashboard configuration
+├── features/         Domain-oriented feature modules
+├── lib/              Demo data and utility logic
+├── styles/           Global theme and visual variants
+└── hooks/            Custom hooks
 ```
 
-## Posizionamento
+## Positioning
 
-MediAnalytics Pro e' pensato come progetto portfolio/prodotto dimostrativo nel settore health & wellness: una base visiva forte, facilmente estendibile verso reporting, agenda operativa e gestione clienti.
+MediAnalytics Pro is intended as a focused digital product concept for the health and wellness space, combining strong presentation, clear information hierarchy, and a structure that can grow into a real operational dashboard.
