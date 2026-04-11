@@ -3,39 +3,39 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 
 const salesData = [
   {
-    name: 'Olivia Martin',
-    email: 'olivia.martin@email.com',
+    name: 'Giulia Esposito',
+    email: 'giulia.esposito@gmail.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/1.png',
-    fallback: 'OM',
-    amount: '+$1,999.00'
+    fallback: 'GE',
+    amount: '+€1.850,00'
   },
   {
-    name: 'Jackson Lee',
-    email: 'jackson.lee@email.com',
+    name: 'Marco Ferretti',
+    email: 'marco.ferretti@libero.it',
     avatar: 'https://api.slingacademy.com/public/sample-users/2.png',
-    fallback: 'JL',
-    amount: '+$39.00'
+    fallback: 'MF',
+    amount: '+€42,00'
   },
   {
-    name: 'Isabella Nguyen',
-    email: 'isabella.nguyen@email.com',
+    name: 'Chiara Romano',
+    email: 'chiara.romano@gmail.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/3.png',
-    fallback: 'IN',
-    amount: '+$299.00'
+    fallback: 'CR',
+    amount: '+€275,00'
   },
   {
-    name: 'William Kim',
-    email: 'will@email.com',
+    name: 'Luca Ricci',
+    email: 'luca.ricci@outlook.it',
     avatar: 'https://api.slingacademy.com/public/sample-users/4.png',
-    fallback: 'WK',
-    amount: '+$99.00'
+    fallback: 'LR',
+    amount: '+€95,00'
   },
   {
-    name: 'Sofia Davis',
-    email: 'sofia.davis@email.com',
+    name: 'Sofia Conti',
+    email: 'sofia.conti@gmail.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/5.png',
-    fallback: 'SD',
-    amount: '+$39.00'
+    fallback: 'SC',
+    amount: '+€38,00'
   }
 ];
 

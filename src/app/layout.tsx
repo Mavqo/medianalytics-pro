@@ -17,7 +17,10 @@ const META_THEME_COLORS = {
 
 export const metadata: Metadata = {
   title: 'MediAnalytics Pro',
-  description: 'Dashboard professionale per centri fisioterapia e benessere'
+  description: 'Dashboard professionale per centri fisioterapia e benessere',
+  alternates: {
+    canonical: 'https://analytics.mavqo.dev'
+  }
 };
 
 export const viewport: Viewport = {
@@ -31,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const themeToApply = isValidTheme ? activeThemeValue! : DEFAULT_THEME;
 
   return (
-    <html lang='en' suppressHydrationWarning data-theme={themeToApply}>
+    <html lang='it' suppressHydrationWarning data-theme={themeToApply}>
       <head>
         <script
           dangerouslySetInnerHTML={{
