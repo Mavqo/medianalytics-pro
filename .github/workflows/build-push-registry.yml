@@ -69,8 +69,11 @@ jobs:
       - name: Verify pushed images
         run: |
           set -euo pipefail
-          docker buildx imagetools inspect "${IMAGE_LATEST}"
-          docker buildx imagetools inspect "${IMAGE_SHA}"
+          echo "Checking registry for pushed tags..."
+          curl -sf "http://${REGISTRY}/v2/${IMAGE_NAME}/manifests/latest" -H "Accept: application/vnd.docker.distribution.manifest.v2+json" > /dev/null
+          echo "✓ latest tag verified"
+          curl -sf "http://${REGISTRY}/v2/${IMAGE_NAME}/manifests/${GITHUB_SHA}" -H "Accept: application/vnd.docker.distribution.manifest.v2+json" > /dev/null
+          echo "✓ SHA tag verified"
 
       - name: Trigger Coolify redeploy webhook (API or signed manual fallback)
         env:
