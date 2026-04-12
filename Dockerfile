@@ -62,8 +62,13 @@ COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
 # Run as non-root user
-USER node
-
 EXPOSE 3000
+
+# Use Node's built-in fetch instead of curl/wget, which are not present in the
+# slim runner image used by Coolify deployments.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=10 \
+  CMD ["node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+
+USER node
 
 CMD ["node", "server.js"]
