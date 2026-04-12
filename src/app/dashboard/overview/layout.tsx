@@ -26,88 +26,88 @@ export default function OverViewLayout({
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-2xl font-bold tracking-tight'>Hi, Welcome back 👋</h2>
+          <h2 className='text-2xl font-bold tracking-tight'>Bentornato 👋</h2>
         </div>
 
         <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Total Revenue</CardDescription>
+              <CardDescription>Fatturato Mensile</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                $1,250.00
+                €31.200
               </CardTitle>
               <CardAction>
                 <Badge variant='outline'>
                   <Icons.trendingUp />
-                  +12.5%
+                  +8%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                Trending up this month <Icons.trendingUp className='size-4' />
+                In crescita questo mese <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Visitors for the last 6 months</div>
+              <div className='text-muted-foreground'>Obiettivo mensile superato</div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>New Customers</CardDescription>
+              <CardDescription>Pazienti Attivi</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                1,234
-              </CardTitle>
-              <CardAction>
-                <Badge variant='outline'>
-                  <Icons.trendingDown />
-                  -20%
-                </Badge>
-              </CardAction>
-            </CardHeader>
-            <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-              <div className='line-clamp-1 flex gap-2 font-medium'>
-                Down 20% this period <Icons.trendingDown className='size-4' />
-              </div>
-              <div className='text-muted-foreground'>Acquisition needs attention</div>
-            </CardFooter>
-          </Card>
-          <Card className='@container/card'>
-            <CardHeader>
-              <CardDescription>Active Accounts</CardDescription>
-              <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                45,678
+                42
               </CardTitle>
               <CardAction>
                 <Badge variant='outline'>
                   <Icons.trendingUp />
-                  +12.5%
+                  +5%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                Strong user retention <Icons.trendingUp className='size-4' />
+                84% del totale pazienti <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Engagement exceed targets</div>
+              <div className='text-muted-foreground'>50 pazienti in archivio</div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Growth Rate</CardDescription>
+              <CardDescription>Appuntamenti Mese</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                4.5%
+                98
               </CardTitle>
               <CardAction>
                 <Badge variant='outline'>
                   <Icons.trendingUp />
-                  +4.5%
+                  +3%
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                Steady performance increase <Icons.trendingUp className='size-4' />
+                Agenda ben occupata <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Meets growth projections</div>
+              <div className='text-muted-foreground'>Media 4,6 visite per paziente</div>
+            </CardFooter>
+          </Card>
+          <Card className='@container/card'>
+            <CardHeader>
+              <CardDescription>Obiettivo Raggiunto</CardDescription>
+              <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
+                111,4%
+              </CardTitle>
+              <CardAction>
+                <Badge variant='outline'>
+                  <Icons.trendingUp />
+                  +11,4%
+                </Badge>
+              </CardAction>
+            </CardHeader>
+            <CardFooter className='flex-col items-start gap-1.5 text-sm'>
+              <div className='line-clamp-1 flex gap-2 font-medium'>
+                Target mensile superato <Icons.trendingUp className='size-4' />
+              </div>
+              <div className='text-muted-foreground'>Obiettivo: €28.000</div>
             </CardFooter>
           </Card>
         </div>
