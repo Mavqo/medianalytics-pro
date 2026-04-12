@@ -51,6 +51,12 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Coolify generates an HTTP healthcheck with curl/wget for Dockerfile apps.
+# Keep curl available in the runner image so deployments stay healthy.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/*
+
 # Copy public assets
 COPY --from=builder --chown=node:node /app/public ./public
 
