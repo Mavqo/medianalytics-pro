@@ -79,8 +79,8 @@ export default function SignInViewPage() {
           {/* Demo Login Form */}
           <div className='w-full space-y-4'>
             <div className='space-y-2 text-center'>
-              <h1 className='text-2xl font-bold'>Welcome back</h1>
-              <p className='text-muted-foreground text-sm'>Demo mode - click below to enter</p>
+              <h1 className='text-2xl font-bold'>Bentornato</h1>
+              <p className='text-muted-foreground text-sm'>Modalità demo — clicca per entrare</p>
             </div>
             <div className='space-y-4'>
               <Input
@@ -91,7 +91,7 @@ export default function SignInViewPage() {
               />
               <Input type='password' placeholder='••••••••' defaultValue='password' disabled />
               <Button onClick={handleDemoLogin} className='w-full'>
-                Enter Demo Mode
+                Entra in modalità demo
               </Button>
             </div>
           </div>

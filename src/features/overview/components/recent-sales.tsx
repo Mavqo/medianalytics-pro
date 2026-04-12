@@ -44,7 +44,7 @@ export function RecentSales() {
     <Card className='h-full'>
       <CardHeader>
         <CardTitle>Pagamenti Recenti</CardTitle>
-        <CardDescription>265 incassi registrati questo mese.</CardDescription>
+        <CardDescription>42 pagamenti registrati questo mese.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className='space-y-8'>

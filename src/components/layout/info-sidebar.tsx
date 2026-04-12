@@ -16,17 +16,12 @@ import {
 
 // Default/fallback data when no content is set
 const defaultData = {
-  title: 'Documentation',
+  title: 'Guida rapida',
   sections: [
     {
-      title: 'Getting Started',
-      description: 'Learn how to get started with this application.',
-      links: [
-        {
-          title: 'Installation Guide',
-          url: '#'
-        }
-      ]
+      title: 'Come usare il dashboard',
+      description: 'Naviga tra le sezioni per visualizzare pazienti, appuntamenti e fatturazione del tuo centro.',
+      links: []
     }
   ]
 };
@@ -63,7 +58,7 @@ export function InfoSidebar({ ...props }: React.ComponentProps<typeof Infobar>) 
                     {section.links && section.links.length > 0 && (
                       <div className='flex flex-col gap-2'>
                         <h4 className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                          Learn more
+                          Approfondisci
                         </h4>
                         <ul className='flex flex-col gap-1.5'>
                           {section.links.map((link) => (
