@@ -9,7 +9,7 @@ import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'MediAnalytics Pro',
-  description: 'Dashboard professionale per centri fisioterapia e benessere',
+  description: 'Professional dashboard for physiotherapy and wellness centers',
   robots: {
     index: false,
     follow: false

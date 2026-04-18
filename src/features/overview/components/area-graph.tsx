@@ -12,27 +12,28 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { fatturatoMensile } from '@/lib/data/analytics';
+import { useT } from '@/lib/i18n/store';
 
-// Transform data for chart
 const chartData = fatturatoMensile.map((item) => ({
   month: item.mese,
   fatturato: item.fatturato,
   obiettivo: item.obiettivo
 }));
 
-const chartConfig = {
-  fatturato: {
-    label: 'Fatturato',
-    color: '#14b8a6' // Teal 500
-  },
-  obiettivo: {
-    label: 'Obiettivo',
-    color: '#f97316' // Orange 500
-  }
-} satisfies ChartConfig;
-
 export function AreaGraph() {
-  // Calculate trend
+  const t = useT();
+
+  const chartConfig = {
+    fatturato: {
+      label: t.analytics.cfgRevenue,
+      color: '#14b8a6'
+    },
+    obiettivo: {
+      label: t.analytics.cfgTarget,
+      color: '#f97316'
+    }
+  } satisfies ChartConfig;
+
   const lastMonth = chartData[chartData.length - 1];
   const prevMonth = chartData[chartData.length - 2];
   const trend = ((lastMonth.fatturato - prevMonth.fatturato) / prevMonth.fatturato) * 100;
@@ -41,7 +42,7 @@ export function AreaGraph() {
     <Card>
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
-          Fatturato Mensile
+          {t.overview.revenueMonthly}
           <Badge variant={trend >= 0 ? 'default' : 'destructive'} className='gap-1'>
             {trend >= 0 ? (
               <Icons.trendingUp className='h-3 w-3' />
@@ -52,7 +53,7 @@ export function AreaGraph() {
             {trend.toFixed(1)}%
           </Badge>
         </CardTitle>
-        <CardDescription>Andamento fatturato vs obiettivo (ultimi 12 mesi)</CardDescription>
+        <CardDescription>{t.overview.revenueTrendDesc}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

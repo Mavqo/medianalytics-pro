@@ -12,9 +12,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { patients } from '@/lib/data/patients';
+import { useT } from '@/lib/i18n/store';
 
-// Calculate age distribution from patients data
-const calculateAgeDistribution = () => {
+const COLORS = ['#14b8a6', '#0d9488', '#f97316', '#fb923c', '#78716c'];
+
+export function PieGraph() {
+  const t = useT();
+
   const ranges = [
     { range: '18-30', min: 18, max: 30, count: 0 },
     { range: '31-40', min: 31, max: 40, count: 0 },
@@ -29,31 +33,18 @@ const calculateAgeDistribution = () => {
     if (range) range.count++;
   });
 
-  return ranges.map((r) => ({
+  const chartData = ranges.map((r) => ({
     name: r.range,
     value: r.count,
-    label: `${r.range} anni`
+    label: `${r.range} ${t.overview.ageSuffix}`
   }));
-};
 
-const chartData = calculateAgeDistribution();
+  const chartConfig = {
+    value: {
+      label: t.overview.patientsLabel
+    }
+  } satisfies ChartConfig;
 
-// MediAnalytics color palette
-const COLORS = [
-  '#14b8a6', // Teal 500
-  '#0d9488', // Teal 600
-  '#f97316', // Orange 500
-  '#fb923c', // Orange 400
-  '#78716c' // Stone 500
-];
-
-const chartConfig = {
-  value: {
-    label: 'Pazienti'
-  }
-} satisfies ChartConfig;
-
-export function PieGraph() {
   const totalPatients = patients.length;
   const topGroup = chartData.reduce((max, curr) => (curr.value > max.value ? curr : max));
 
@@ -61,13 +52,15 @@ export function PieGraph() {
     <Card className='flex h-full flex-col'>
       <CardHeader className='items-center pb-0'>
         <CardTitle className='flex items-center gap-2'>
-          Distribuzione Pazienti
+          {t.overview.patientsDistTitle}
           <Badge variant='outline' className='gap-1 border-primary text-primary'>
             <Icons.users className='h-3 w-3' />
             {totalPatients}
           </Badge>
         </CardTitle>
-        <CardDescription>Per fascia età - Gruppo principale: {topGroup.name}</CardDescription>
+        <CardDescription>
+          {t.overview.patientsDistDesc}: {topGroup.name}
+        </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-1 items-center justify-center pb-0'>
         <ChartContainer
@@ -81,7 +74,10 @@ export function PieGraph() {
                   formatter={(value, name, props) => {
                     const numValue = Number(value);
                     const percentage = ((numValue / totalPatients) * 100).toFixed(1);
-                    return [`${numValue} pazienti (${percentage}%)`, props?.payload?.name];
+                    return [
+                      `${numValue} ${t.overview.patientsUnit} (${percentage}%)`,
+                      props?.payload?.name
+                    ];
                   }}
                 />
               }

@@ -12,66 +12,67 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { kpiPrincipali, statisticheGiornaliere } from '@/lib/data/analytics';
-
-// Data for radial bar chart
-const chartData = [
-  {
-    name: 'Obiettivo Mensile',
-    value: Math.min(kpiPrincipali.percentualeObiettivo, 100),
-    fullMark: 100,
-    fill: '#14b8a6' // Teal 500
-  },
-  {
-    name: 'Tasso Completamento',
-    value: statisticheGiornaliere.tassoCompletamento,
-    fullMark: 100,
-    fill: '#0d9488' // Teal 600
-  },
-  {
-    name: 'Tasso Occupazione',
-    value: statisticheGiornaliere.tassoOccupazione,
-    fullMark: 100,
-    fill: '#f97316' // Orange 500
-  },
-  {
-    name: 'Retention Pazienti',
-    value: 78.5,
-    fullMark: 100,
-    fill: '#fb923c' // Orange 400
-  }
-];
-
-const chartConfig = {
-  value: {
-    label: 'Percentuale'
-  }
-} satisfies ChartConfig;
+import { useT } from '@/lib/i18n/store';
 
 export function RadialBarGraph() {
+  const t = useT();
   const obiettivoRaggiunto = kpiPrincipali.percentualeObiettivo >= 100;
+
+  const chartData = [
+    {
+      name: t.overview.goalMonthly,
+      value: Math.min(kpiPrincipali.percentualeObiettivo, 100),
+      fullMark: 100,
+      fill: '#14b8a6'
+    },
+    {
+      name: t.overview.rateCompletion,
+      value: statisticheGiornaliere.tassoCompletamento,
+      fullMark: 100,
+      fill: '#0d9488'
+    },
+    {
+      name: t.overview.rateOccupancy,
+      value: statisticheGiornaliere.tassoOccupazione,
+      fullMark: 100,
+      fill: '#f97316'
+    },
+    {
+      name: t.overview.patientRetention,
+      value: 78.5,
+      fullMark: 100,
+      fill: '#fb923c'
+    }
+  ];
+
+  const chartConfig = {
+    value: {
+      label: t.overview.percentageLabel
+    }
+  } satisfies ChartConfig;
 
   return (
     <Card className='flex h-full flex-col'>
       <CardHeader className='items-center pb-0'>
         <CardTitle className='flex items-center gap-2'>
-          Obiettivi Mensili
+          {t.overview.monthlyGoalsTitle}
           <Badge
             variant={obiettivoRaggiunto ? 'default' : 'outline'}
             className={obiettivoRaggiunto ? 'bg-primary' : ''}
           >
             {obiettivoRaggiunto ? (
               <>
-                <Icons.check className='h-3 w-3 mr-1' /> Raggiunto
+                <Icons.check className='h-3 w-3 mr-1' /> {t.overview.goalReached}
               </>
             ) : (
-              'In corso'
+              t.overview.goalInProgress
             )}
           </Badge>
         </CardTitle>
         <CardDescription>
           {obiettivoRaggiunto
-            ? `Superato del ${(kpiPrincipali.percentualeObiettivo - 100).toFixed(1)}%`
-            : `${kpiPrincipali.percentualeObiettivo.toFixed(1)}% completato`}
+            ? `${t.overview.goalExceededBy} ${(kpiPrincipali.percentualeObiettivo - 100).toFixed(1)}%`
+            : `${kpiPrincipali.percentualeObiettivo.toFixed(1)}% ${t.overview.goalCompleted}`}
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-1 items-center justify-center pb-0 pt-4'>
@@ -102,7 +103,10 @@ export function RadialBarGraph() {
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Completamento']}
+                  formatter={(value) => [
+                    `${Number(value).toFixed(1)}%`,
+                    t.overview.completionLabel
+                  ]}
                 />
               }
             />

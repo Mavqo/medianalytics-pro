@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { AppointmentsTable } from '@/features/appointments/components/appointments-table';
 
 export const metadata: Metadata = {
-  title: 'Appuntamenti | MediAnalytics Pro',
-  description: 'Agenda appuntamenti e prenotazioni'
+  title: 'Appointments | MediAnalytics Pro',
+  description: 'Appointment schedule and bookings'
 };
 
 export default function AppointmentsPage() {

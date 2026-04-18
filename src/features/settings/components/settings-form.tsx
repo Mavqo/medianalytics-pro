@@ -82,7 +82,7 @@ export function SettingsForm() {
                 </div>
                 <div className='md:col-span-2'>
                   <Label className='mb-1.5 block'>{t.settings.bio}</Label>
-                  <Textarea defaultValue='Direttore clinico con 15 anni di esperienza in fisioterapia.' />
+                  <Textarea defaultValue={t.settings.bioDefault} />
                 </div>
                 <div className='md:col-span-2 flex items-center gap-3'>
                   <Button type='submit' className='gap-2'>
@@ -132,31 +132,28 @@ export function SettingsForm() {
             </CardHeader>
             <CardContent className='flex flex-col gap-1'>
               <ToggleRow
-                title='Promemoria appuntamenti'
-                desc='Email e SMS ai pazienti 24h prima della seduta'
+                title={t.settings.remindersTitle}
+                desc={t.settings.remindersDesc}
                 defaultChecked
               />
               <Separator />
               <ToggleRow
-                title='Alert stock basso'
-                desc='Notifica quando un articolo scende sotto la soglia'
+                title={t.settings.lowStockTitle}
+                desc={t.settings.lowStockDesc}
                 defaultChecked
               />
               <Separator />
               <ToggleRow
-                title='Report settimanale'
-                desc='Ogni lunedì via email con KPI e fatturato'
+                title={t.settings.weeklyReportTitle}
+                desc={t.settings.weeklyReportDesc}
                 defaultChecked
               />
               <Separator />
-              <ToggleRow
-                title='Nuove recensioni'
-                desc='Notifica push ogni volta che un paziente lascia feedback'
-              />
+              <ToggleRow title={t.settings.reviewsTitle} desc={t.settings.reviewsDesc} />
               <Separator />
               <ToggleRow
-                title='Aggiornamenti prodotto'
-                desc='Novità e release note di MediAnalytics'
+                title={t.settings.productUpdatesTitle}
+                desc={t.settings.productUpdatesDesc}
               />
             </CardContent>
           </Card>
@@ -172,9 +169,7 @@ export function SettingsForm() {
               <div className='flex items-center justify-between rounded-lg border p-4'>
                 <div>
                   <div className='font-semibold'>{t.billing.planPro}</div>
-                  <div className='text-sm text-muted-foreground'>
-                    €49/mese · fatturazione annuale
-                  </div>
+                  <div className='text-sm text-muted-foreground'>{t.settings.planDetailsShort}</div>
                 </div>
                 <Button variant='outline'>{t.billing.changePlan}</Button>
               </div>
@@ -188,7 +183,7 @@ export function SettingsForm() {
               <div className='flex items-center justify-between rounded-lg border p-4'>
                 <div>
                   <div className='font-semibold'>{t.settings.nextRenewal}</div>
-                  <div className='text-sm text-muted-foreground'>15/05/2026 · €588</div>
+                  <div className='text-sm text-muted-foreground'>{t.settings.renewalLine}</div>
                 </div>
                 <Button variant='ghost'>{t.billing.invoices}</Button>
               </div>
@@ -216,14 +211,14 @@ export function SettingsForm() {
               </form>
               <Separator />
               <ToggleRow
-                title='Autenticazione a 2 fattori'
-                desc='Richiedi un codice via app authenticator al login'
+                title={t.settings.twoFactorTitle}
+                desc={t.settings.twoFactorDesc}
                 defaultChecked
               />
               <Separator />
               <ToggleRow
-                title='Avviso login sospetti'
-                desc='Email quando il login arriva da un dispositivo nuovo'
+                title={t.settings.suspiciousLoginTitle}
+                desc={t.settings.suspiciousLoginDesc}
                 defaultChecked
               />
             </CardContent>

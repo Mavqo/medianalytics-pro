@@ -4,7 +4,7 @@ import { AnalyticsDashboard } from '@/features/analytics/components/analytics-da
 
 export const metadata: Metadata = {
   title: 'Analytics | MediAnalytics Pro',
-  description: 'Analisi avanzate e reportistica'
+  description: 'Advanced analytics and reporting'
 };
 
 export default function AnalyticsPage() {

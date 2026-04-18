@@ -13,21 +13,21 @@ import {
   InfobarTrigger,
   useInfobar
 } from '@/components/ui/infobar';
-
-// Default/fallback data when no content is set
-const defaultData = {
-  title: 'Guida rapida',
-  sections: [
-    {
-      title: 'Come usare il dashboard',
-      description: 'Naviga tra le sezioni per visualizzare pazienti, appuntamenti e fatturazione del tuo centro.',
-      links: []
-    }
-  ]
-};
+import { useT } from '@/lib/i18n/store';
 
 export function InfoSidebar({ ...props }: React.ComponentProps<typeof Infobar>) {
   const { content } = useInfobar();
+  const t = useT();
+  const defaultData = {
+    title: t.sidebar.quickGuide,
+    sections: [
+      {
+        title: t.sidebar.howToUse,
+        description: t.sidebar.howToUseDesc,
+        links: []
+      }
+    ]
+  };
   const data = content || defaultData;
 
   return (
@@ -58,7 +58,7 @@ export function InfoSidebar({ ...props }: React.ComponentProps<typeof Infobar>) 
                     {section.links && section.links.length > 0 && (
                       <div className='flex flex-col gap-2'>
                         <h4 className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                          Approfondisci
+                          {t.sidebar.learnMore}
                         </h4>
                         <ul className='flex flex-col gap-1.5'>
                           {section.links.map((link) => (

@@ -41,39 +41,34 @@ import { useT } from '@/lib/i18n/store';
 
 const PIE_COLORS = ['#14b8a6', '#f97316', '#6366f1', '#ec4899', '#eab308'];
 
-const revenueConfig = {
-  fatturato: { label: 'Fatturato', color: '#14b8a6' },
-  obiettivo: { label: 'Obiettivo', color: '#94a3b8' }
-} satisfies ChartConfig;
-
-const therapistConfig = {
-  fatturato: { label: 'Fatturato (€)', color: '#f97316' }
-} satisfies ChartConfig;
-
-const treatmentConfig = {
-  visite: { label: 'Visite' }
-} satisfies ChartConfig;
-
-const dayConfig = {
-  visite: { label: 'Visite', color: '#14b8a6' },
-  fatturato: { label: 'Fatturato (€)', color: '#f97316' }
-} satisfies ChartConfig;
-
-const patientsConfig = {
-  nuoviPazienti: { label: 'Nuovi', color: '#14b8a6' },
-  pazientiRicorrenti: { label: 'Ricorrenti', color: '#6366f1' }
-} satisfies ChartConfig;
-
-const reviewsConfig = {
-  media: { label: 'Media stelle', color: '#eab308' }
-} satisfies ChartConfig;
-
 const euroFmt = (n: number) => `€${n.toLocaleString('it-IT')}`;
 
 export function AnalyticsDashboard() {
   const t = useT();
   const topTherapist = topTerapeuti[0];
   const revenueYTD = fatturatoMensile.reduce((a, c) => a + c.fatturato, 0);
+
+  const revenueConfigI18n = {
+    fatturato: { label: t.analytics.cfgRevenue, color: '#14b8a6' },
+    obiettivo: { label: t.analytics.cfgTarget, color: '#94a3b8' }
+  } satisfies ChartConfig;
+  const therapistConfigI18n = {
+    fatturato: { label: t.analytics.cfgRevenueEur, color: '#f97316' }
+  } satisfies ChartConfig;
+  const treatmentConfigI18n = {
+    visite: { label: t.analytics.cfgVisits }
+  } satisfies ChartConfig;
+  const dayConfigI18n = {
+    visite: { label: t.analytics.cfgVisits, color: '#14b8a6' },
+    fatturato: { label: t.analytics.cfgRevenueEur, color: '#f97316' }
+  } satisfies ChartConfig;
+  const patientsConfigI18n = {
+    nuoviPazienti: { label: t.analytics.cfgNew, color: '#14b8a6' },
+    pazientiRicorrenti: { label: t.analytics.cfgRecurring, color: '#6366f1' }
+  } satisfies ChartConfig;
+  const reviewsConfigI18n = {
+    media: { label: t.analytics.cfgAvgStars, color: '#eab308' }
+  } satisfies ChartConfig;
 
   return (
     <div className='flex flex-col gap-6'>
@@ -118,7 +113,7 @@ export function AnalyticsDashboard() {
         <KpiCard
           label={t.analytics.noShowRate}
           value={`${statisticheGiornaliere.tassoNoShow}%`}
-          hint='-0.5% vs mese scorso'
+          hint={t.analytics.noShowHint}
           positive
         />
       </div>
@@ -127,15 +122,15 @@ export function AnalyticsDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              Fatturato per Mese
+              {t.analytics.chartRevenueTitle}
               <Badge variant='outline' className='border-primary text-primary'>
-                {euroFmt(revenueYTD)} YTD
+                {euroFmt(revenueYTD)} {t.analytics.ytdSuffix}
               </Badge>
             </CardTitle>
-            <CardDescription>Reale vs obiettivo — ultimi 12 mesi</CardDescription>
+            <CardDescription>{t.analytics.chartRevenueDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={revenueConfig} className='h-72 w-full'>
+            <ChartContainer config={revenueConfigI18n} className='h-72 w-full'>
               <AreaChart data={fatturatoMensile} margin={{ left: 0, right: 10, top: 10 }}>
                 <defs>
                   <linearGradient id='revGrad' x1='0' y1='0' x2='0' y2='1'>
@@ -173,13 +168,14 @@ export function AnalyticsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Top Terapeuti</CardTitle>
+            <CardTitle>{t.analytics.chartTherapistsTitle}</CardTitle>
             <CardDescription>
-              Leader: {topTherapist.nome} — {euroFmt(topTherapist.fatturato)}
+              {t.analytics.chartTherapistsLeader}: {topTherapist.nome} —{' '}
+              {euroFmt(topTherapist.fatturato)}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={therapistConfig} className='h-72 w-full'>
+            <ChartContainer config={therapistConfigI18n} className='h-72 w-full'>
               <BarChart data={topTerapeuti} layout='vertical' margin={{ left: 20, right: 20 }}>
                 <CartesianGrid horizontal={false} strokeDasharray='3 3' stroke='#e7e5e4' />
                 <XAxis
@@ -207,11 +203,11 @@ export function AnalyticsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Mix Trattamenti</CardTitle>
-            <CardDescription>Distribuzione visite per tipo</CardDescription>
+            <CardTitle>{t.analytics.chartTreatmentsTitle}</CardTitle>
+            <CardDescription>{t.analytics.chartTreatmentsDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={treatmentConfig} className='h-72 w-full'>
+            <ChartContainer config={treatmentConfigI18n} className='h-72 w-full'>
               <PieChart>
                 <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                 <Pie
@@ -234,11 +230,11 @@ export function AnalyticsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Distribuzione per Giorno</CardTitle>
-            <CardDescription>Visite e fatturato settimanale</CardDescription>
+            <CardTitle>{t.analytics.chartDayTitle}</CardTitle>
+            <CardDescription>{t.analytics.chartDayDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={dayConfig} className='h-72 w-full'>
+            <ChartContainer config={dayConfigI18n} className='h-72 w-full'>
               <BarChart data={visitePerGiorno} margin={{ top: 10, right: 10 }}>
                 <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='#e7e5e4' />
                 <XAxis dataKey='giorno' tickLine={false} axisLine={false} fontSize={12} />
@@ -254,11 +250,11 @@ export function AnalyticsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Crescita Pazienti</CardTitle>
-            <CardDescription>Nuovi vs ricorrenti</CardDescription>
+            <CardTitle>{t.analytics.chartPatientsTitle}</CardTitle>
+            <CardDescription>{t.analytics.chartPatientsDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={patientsConfig} className='h-72 w-full'>
+            <ChartContainer config={patientsConfigI18n} className='h-72 w-full'>
               <BarChart data={nuoviPazienti} margin={{ top: 10, right: 10 }}>
                 <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='#e7e5e4' />
                 <XAxis
@@ -285,11 +281,11 @@ export function AnalyticsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Andamento Recensioni</CardTitle>
-            <CardDescription>Media stelle e volume</CardDescription>
+            <CardTitle>{t.analytics.chartReviewsTitle}</CardTitle>
+            <CardDescription>{t.analytics.chartReviewsDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={reviewsConfig} className='h-72 w-full'>
+            <ChartContainer config={reviewsConfigI18n} className='h-72 w-full'>
               <LineChart data={andamentoRecensioni} margin={{ top: 10, right: 10 }}>
                 <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='#e7e5e4' />
                 <XAxis

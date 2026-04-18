@@ -2,20 +2,16 @@
 import { buttonVariants } from '@/components/ui/button';
 import { GitHubStarsButton } from '@/components/github-stars-button';
 import { cn } from '@/lib/utils';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { InteractiveGridPattern } from './interactive-grid';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-export const metadata: Metadata = {
-  title: 'Authentication',
-  description: 'Authentication forms built using the components.'
-};
+import { useT } from '@/lib/i18n/store';
 
 export default function SignInViewPage() {
   const router = useRouter();
+  const t = useT();
 
   const handleDemoLogin = () => {
     // Demo mode: redirect diretto senza auth
@@ -58,11 +54,8 @@ export default function SignInViewPage() {
         />
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
-            <p className='text-lg'>
-              &ldquo;Dashboard professionale per centri fisioterapia e benessere. Gestisci pazienti,
-              appuntamenti e fatturazione in un unico posto.&rdquo;
-            </p>
-            <footer className='text-sm'>MediAnalytics Team</footer>
+            <p className='text-lg'>&ldquo;{t.auth.quote}&rdquo;</p>
+            <footer className='text-sm'>{t.auth.quoteAuthor}</footer>
           </blockquote>
         </div>
       </div>
@@ -79,8 +72,8 @@ export default function SignInViewPage() {
           {/* Demo Login Form */}
           <div className='w-full space-y-4'>
             <div className='space-y-2 text-center'>
-              <h1 className='text-2xl font-bold'>Bentornato</h1>
-              <p className='text-muted-foreground text-sm'>Modalità demo — clicca per entrare</p>
+              <h1 className='text-2xl font-bold'>{t.auth.welcome}</h1>
+              <p className='text-muted-foreground text-sm'>{t.auth.demoModeCta}</p>
             </div>
             <div className='space-y-4'>
               <Input
@@ -91,7 +84,7 @@ export default function SignInViewPage() {
               />
               <Input type='password' placeholder='••••••••' defaultValue='password' disabled />
               <Button onClick={handleDemoLogin} className='w-full'>
-                Entra in modalità demo
+                {t.auth.enterDemo}
               </Button>
             </div>
           </div>

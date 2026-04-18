@@ -12,26 +12,28 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { visitePerTipo } from '@/lib/data/analytics';
+import { useT } from '@/lib/i18n/store';
 
-// Transform data for chart
 const chartData = visitePerTipo.map((item) => ({
   tipo: item.tipo,
   visite: item.visite,
   fatturato: item.fatturato
 }));
 
-const chartConfig = {
-  visite: {
-    label: 'Visite',
-    color: '#14b8a6' // Teal 500
-  },
-  fatturato: {
-    label: 'Fatturato (€)',
-    color: '#f97316' // Orange 500
-  }
-} satisfies ChartConfig;
-
 export function BarGraph() {
+  const t = useT();
+
+  const chartConfig = {
+    visite: {
+      label: t.analytics.cfgVisits,
+      color: '#14b8a6'
+    },
+    fatturato: {
+      label: t.analytics.cfgRevenueEur,
+      color: '#f97316'
+    }
+  } satisfies ChartConfig;
+
   const totalVisits = chartData.reduce((acc, curr) => acc + curr.visite, 0);
   const topTreatment = chartData.reduce((max, curr) => (curr.visite > max.visite ? curr : max));
 
@@ -39,14 +41,14 @@ export function BarGraph() {
     <Card>
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
-          Visite per Tipo Trattamento
+          {t.analytics.visitsByTreatmentTitle}
           <Badge variant='outline' className='gap-1 border-primary text-primary'>
             <Icons.trendingUp className='h-3 w-3' />
-            {totalVisits} visite
+            {totalVisits} {t.analytics.visitsUnit}
           </Badge>
         </CardTitle>
         <CardDescription>
-          Top: {topTreatment.tipo} ({topTreatment.visite} visite)
+          {t.analytics.top}: {topTreatment.tipo} ({topTreatment.visite} {t.analytics.visitsUnit})
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -82,7 +84,7 @@ export function BarGraph() {
                   hideLabel
                   formatter={(value, name) => [
                     name === 'fatturato' ? `€${Number(value).toLocaleString('it-IT')}` : value,
-                    name === 'fatturato' ? 'Fatturato' : 'Visite'
+                    name === 'fatturato' ? t.analytics.cfgRevenue : t.analytics.cfgVisits
                   ]}
                 />
               }

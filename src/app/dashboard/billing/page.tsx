@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { BillingPanel } from '@/features/billing/components/billing-panel';
 
 export const metadata: Metadata = {
-  title: 'Fatturazione | MediAnalytics Pro',
-  description: 'Fatture, pagamenti e piano attivo'
+  title: 'Billing | MediAnalytics Pro',
+  description: 'Invoices, payments and active plan'
 };
 
 export default function BillingPage() {

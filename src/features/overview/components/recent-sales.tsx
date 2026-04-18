@@ -1,5 +1,8 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import { useT } from '@/lib/i18n/store';
 
 const salesData = [
   {
@@ -40,11 +43,12 @@ const salesData = [
 ];
 
 export function RecentSales() {
+  const t = useT();
   return (
     <Card className='h-full'>
       <CardHeader>
-        <CardTitle>Pagamenti Recenti</CardTitle>
-        <CardDescription>42 pagamenti registrati questo mese.</CardDescription>
+        <CardTitle>{t.overview.recentPayments}</CardTitle>
+        <CardDescription>{t.overview.recentPaymentsDesc}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className='space-y-8'>

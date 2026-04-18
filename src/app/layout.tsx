@@ -17,7 +17,7 @@ const META_THEME_COLORS = {
 
 export const metadata: Metadata = {
   title: 'MediAnalytics Pro',
-  description: 'Dashboard professionale per centri fisioterapia e benessere',
+  description: 'Professional dashboard for physiotherapy and wellness centers',
   alternates: {
     canonical: 'https://analytics.mavqo.dev'
   }

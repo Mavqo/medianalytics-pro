@@ -3,19 +3,15 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Icons } from '@/components/icons';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { InteractiveGridPattern } from './interactive-grid';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-
-export const metadata: Metadata = {
-  title: 'Authentication',
-  description: 'Authentication forms built using the components.'
-};
+import { useT } from '@/lib/i18n/store';
 
 export default function SignUpViewPage({ stars }: { stars: number }) {
   const router = useRouter();
+  const t = useT();
 
   const handleDemoRegister = () => {
     // Demo mode: redirect diretto senza auth
@@ -58,11 +54,8 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
         />
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
-            <p className='text-lg'>
-              &ldquo;Dashboard professionale per centri fisioterapia e benessere. Gestisci pazienti,
-              appuntamenti e fatturazione in un unico posto.&rdquo;
-            </p>
-            <footer className='text-sm'>MediAnalytics Team</footer>
+            <p className='text-lg'>&ldquo;{t.auth.quote}&rdquo;</p>
+            <footer className='text-sm'>{t.auth.quoteAuthor}</footer>
           </blockquote>
         </div>
       </div>
@@ -75,7 +68,7 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
           >
             <div className='flex items-center'>
               <GitHubLogoIcon className='size-4' />
-              <span className='ml-1 inline'>Star on GitHub</span>{' '}
+              <span className='ml-1 inline'>{t.auth.starOnGithub}</span>{' '}
             </div>
             <div className='ml-2 flex items-center gap-1 text-sm md:flex'>
               <Icons.exclusive
@@ -89,16 +82,16 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
           {/* Demo Sign Up */}
           <div className='w-full space-y-4 text-center'>
             <div className='space-y-2'>
-              <h1 className='text-2xl font-bold'>Create account</h1>
-              <p className='text-muted-foreground text-sm'>Demo mode - registration is disabled</p>
+              <h1 className='text-2xl font-bold'>{t.auth.createAccount}</h1>
+              <p className='text-muted-foreground text-sm'>{t.auth.registrationDisabled}</p>
             </div>
             <Button onClick={handleDemoRegister} className='w-full'>
-              Continue to Demo
+              {t.auth.continueToDemo}
             </Button>
             <p className='text-sm'>
-              Already have an account?{' '}
+              {t.auth.alreadyHaveAccount}{' '}
               <Link href='/auth/sign-in' className='underline'>
-                Sign in
+                {t.auth.signIn}
               </Link>
             </p>
           </div>

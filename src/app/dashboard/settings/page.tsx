@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { SettingsForm } from '@/features/settings/components/settings-form';
 
 export const metadata: Metadata = {
-  title: 'Impostazioni | MediAnalytics Pro',
-  description: 'Impostazioni account e applicazione'
+  title: 'Settings | MediAnalytics Pro',
+  description: 'Account and application settings'
 };
 
 export default function SettingsPage() {

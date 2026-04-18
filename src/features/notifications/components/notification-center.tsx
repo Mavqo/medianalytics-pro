@@ -10,6 +10,7 @@ import { NotificationCard } from '@/components/ui/notification-card';
 import { useNotificationStore } from '../utils/store';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useT, useLocale } from '@/lib/i18n/store';
 
 const MAX_VISIBLE = 5;
 
@@ -46,6 +47,8 @@ const getNotificationIcon = (title: string, priority?: string) => {
 };
 
 export function NotificationCenter() {
+  const t = useT();
+  const locale = useLocale();
   const { notifications, markAsRead, markAllAsRead, unreadCount, getHighPriorityCount } =
     useNotificationStore();
   const router = useRouter();
@@ -68,26 +71,26 @@ export function NotificationCenter() {
               {count > 9 ? '9+' : count}
             </span>
           )}
-          <span className='sr-only'>Notifiche</span>
+          <span className='sr-only'>{t.notifications.srNotifications}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align='end' className='w-[calc(100vw-2rem)] p-0 sm:w-[420px]' sideOffset={8}>
         <div className='flex items-center justify-between px-4 py-3'>
           <Link href='/dashboard/notifications' className='group flex items-center gap-1'>
             <h4 className='text-sm font-semibold group-hover:underline text-secondary-900'>
-              Notifiche
+              {t.notifications.title}
             </h4>
             <Icons.chevronRight className='text-muted-foreground h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5' />
           </Link>
           <div className='flex items-center gap-2'>
             {highPriorityCount > 0 && (
               <span className='bg-error-100 text-error rounded-full px-2 py-0.5 text-xs font-medium'>
-                {highPriorityCount} urgenti
+                {highPriorityCount} {t.notifications.urgent}
               </span>
             )}
             {count > 0 && (
               <span className='bg-primary-100 text-primary rounded-full px-2 py-0.5 text-xs'>
-                {count} da leggere
+                {count} {t.notifications.toRead}
               </span>
             )}
             {count > 0 && (
@@ -97,7 +100,7 @@ export function NotificationCenter() {
                 className='text-muted-foreground h-auto px-2 py-1 text-xs hover:text-primary hover:bg-primary-50'
                 onClick={markAllAsRead}
               >
-                Segna tutte come lette
+                {t.notifications.markAllRead}
               </Button>
             )}
           </div>
@@ -107,7 +110,7 @@ export function NotificationCenter() {
           {notifications.length === 0 ? (
             <div className='flex flex-col items-center justify-center py-12'>
               <Icons.notification className='text-muted-foreground/40 mb-2 h-8 w-8' />
-              <p className='text-muted-foreground text-sm'>Nessuna notifica</p>
+              <p className='text-muted-foreground text-sm'>{t.notifications.noNotifications}</p>
             </div>
           ) : (
             <div className='flex flex-col gap-1 p-2'>
@@ -147,7 +150,7 @@ export function NotificationCenter() {
                           onClick={() => markAsRead(notification.id)}
                           className='text-xs text-primary hover:underline shrink-0'
                         >
-                          Segna come letta
+                          {t.notifications.markAsRead}
                         </button>
                       )}
                     </div>
@@ -155,12 +158,15 @@ export function NotificationCenter() {
                       {notification.body}
                     </p>
                     <p className='text-[10px] text-secondary-400 mt-1'>
-                      {new Date(notification.createdAt).toLocaleDateString('it-IT', {
-                        day: 'numeric',
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
+                      {new Date(notification.createdAt).toLocaleDateString(
+                        locale === 'it' ? 'it-IT' : 'en-US',
+                        {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }
+                      )}
                     </p>
                     {notification.actions && notification.actions.length > 0 && (
                       <div className='flex gap-2 mt-2'>

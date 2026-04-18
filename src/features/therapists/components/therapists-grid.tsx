@@ -130,18 +130,21 @@ export function TherapistsGrid() {
                     <Star className='h-3 w-3 fill-amber-500 text-amber-500' />
                     {t.rating}
                   </div>
-                  <div className='text-muted-foreground'>Rating</div>
+                  <div className='text-muted-foreground'>{tr.therapists.rating}</div>
                 </div>
                 <div>
                   <div className='flex items-center justify-center gap-1 font-semibold'>
                     <Users className='h-3 w-3' />
                     {t.pazientiAttivi}
                   </div>
-                  <div className='text-muted-foreground'>Pazienti</div>
+                  <div className='text-muted-foreground'>{tr.therapists.patientsShort}</div>
                 </div>
                 <div>
-                  <div className='font-semibold'>{t.esperienzaAnni}a</div>
-                  <div className='text-muted-foreground'>Esperienza</div>
+                  <div className='font-semibold'>
+                    {t.esperienzaAnni}
+                    {tr.therapists.yearsShort}
+                  </div>
+                  <div className='text-muted-foreground'>{tr.therapists.experience}</div>
                 </div>
               </div>
               <div className='flex flex-col gap-1 text-xs text-muted-foreground'>
@@ -153,7 +156,7 @@ export function TherapistsGrid() {
                 </span>
               </div>
               <Button variant='outline' size='sm'>
-                Vedi profilo
+                {tr.therapists.viewProfile}
               </Button>
             </CardContent>
           </Card>

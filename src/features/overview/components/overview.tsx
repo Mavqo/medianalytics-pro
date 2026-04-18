@@ -25,6 +25,7 @@ import {
   metricheRetention
 } from '@/lib/data/analytics';
 import { getActivePatients, patients } from '@/lib/data/patients';
+import { useT } from '@/lib/i18n/store';
 
 // Format currency
 const formatCurrency = (value: number) => {
@@ -36,6 +37,7 @@ const formatCurrency = (value: number) => {
 };
 
 export default function OverViewPage() {
+  const t = useT();
   const activePatients = getActivePatients();
   const totalVisits = getTotalVisits();
   const obiettivoRaggiunto = kpiPrincipali.percentualeObiettivo >= 100;
@@ -46,27 +48,27 @@ export default function OverViewPage() {
         <div className='flex items-center justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight text-secondary-900'>
-              Panoramica Centro
+              {t.overview.pageTitle}
             </h2>
-            <p className='text-muted-foreground'>Benvenuto nel dashboard di MediAnalytics Pro</p>
+            <p className='text-muted-foreground'>{t.overview.welcome}</p>
           </div>
           <div className='hidden items-center gap-2 md:flex'>
             <Button variant='outline' className='gap-2'>
               <Icons.calendar className='h-4 w-4' />
-              Aprile 2025
+              {t.overview.monthButton}
             </Button>
             <Button className='gap-2 bg-primary hover:bg-primary-700'>
               <Icons.arrowRight className='h-4 w-4' />
-              Nuovo Appuntamento
+              {t.overview.newAppointment}
             </Button>
           </div>
         </div>
 
         <Tabs defaultValue='overview' className='space-y-4'>
           <TabsList>
-            <TabsTrigger value='overview'>Panoramica</TabsTrigger>
-            <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-            <TabsTrigger value='reports'>Report</TabsTrigger>
+            <TabsTrigger value='overview'>{t.overview.tabOverview}</TabsTrigger>
+            <TabsTrigger value='analytics'>{t.overview.tabAnalytics}</TabsTrigger>
+            <TabsTrigger value='reports'>{t.overview.tabReports}</TabsTrigger>
           </TabsList>
 
           <TabsContent value='overview' className='space-y-4'>
@@ -76,7 +78,7 @@ export default function OverViewPage() {
               <Card className='border-l-4 border-l-primary'>
                 <CardHeader className='pb-2'>
                   <CardDescription className='text-secondary-600'>
-                    Fatturato Mensile
+                    {t.overview.revenueMonthly}
                   </CardDescription>
                   <CardTitle className='text-2xl font-bold text-secondary-900'>
                     {formatCurrency(kpiPrincipali.fatturatoMeseCorrente)}
@@ -98,7 +100,7 @@ export default function OverViewPage() {
                 </CardHeader>
                 <CardFooter className='pt-0'>
                   <p className='text-xs text-muted-foreground'>
-                    vs {formatCurrency(kpiPrincipali.fatturatoMesePrecedente)} mese precedente
+                    {t.overview.vsPrevMonth} {formatCurrency(kpiPrincipali.fatturatoMesePrecedente)}
                   </p>
                 </CardFooter>
               </Card>
@@ -106,20 +108,22 @@ export default function OverViewPage() {
               {/* Pazienti Attivi Card */}
               <Card className='border-l-4 border-l-primary'>
                 <CardHeader className='pb-2'>
-                  <CardDescription className='text-secondary-600'>Pazienti Attivi</CardDescription>
+                  <CardDescription className='text-secondary-600'>
+                    {t.overview.activePatients}
+                  </CardDescription>
                   <CardTitle className='text-2xl font-bold text-secondary-900'>
                     {activePatients.length}
                   </CardTitle>
                   <CardAction>
                     <Badge variant='outline' className='border-primary text-primary'>
                       <Icons.users className='mr-1 h-3 w-3' />
-                      {patients.length} totali
+                      {patients.length} {t.overview.totalsSuffix}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='pt-0'>
                   <p className='text-xs text-muted-foreground'>
-                    {statisticheGiornaliere.pazientiNuoviQuestaSettimana} nuovi questa settimana
+                    {statisticheGiornaliere.pazientiNuoviQuestaSettimana} {t.overview.newThisWeek}
                   </p>
                 </CardFooter>
               </Card>
@@ -128,7 +132,7 @@ export default function OverViewPage() {
               <Card className='border-l-4 border-l-accent'>
                 <CardHeader className='pb-2'>
                   <CardDescription className='text-secondary-600'>
-                    Appuntamenti Oggi
+                    {t.overview.appointmentsToday}
                   </CardDescription>
                   <CardTitle className='text-2xl font-bold text-secondary-900'>
                     {statisticheGiornaliere.appuntamentiOggi}
@@ -136,13 +140,13 @@ export default function OverViewPage() {
                   <CardAction>
                     <Badge variant='outline' className='border-accent text-accent-600'>
                       <Icons.calendar className='mr-1 h-3 w-3' />+
-                      {statisticheGiornaliere.appuntamentiDomani} domani
+                      {statisticheGiornaliere.appuntamentiDomani} {t.overview.tomorrow}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='pt-0'>
                   <p className='text-xs text-muted-foreground'>
-                    Tasso completamento: {statisticheGiornaliere.tassoCompletamento}%
+                    {t.overview.completionRate}: {statisticheGiornaliere.tassoCompletamento}%
                   </p>
                 </CardFooter>
               </Card>
@@ -150,7 +154,9 @@ export default function OverViewPage() {
               {/* Tasso Retention Card */}
               <Card className='border-l-4 border-l-accent'>
                 <CardHeader className='pb-2'>
-                  <CardDescription className='text-secondary-600'>Tasso Retention</CardDescription>
+                  <CardDescription className='text-secondary-600'>
+                    {t.overview.retentionRate}
+                  </CardDescription>
                   <CardTitle className='text-2xl font-bold text-secondary-900'>
                     {metricheRetention.tassoRetention}%
                   </CardTitle>
@@ -162,13 +168,14 @@ export default function OverViewPage() {
                       }
                     >
                       <Icons.check className='mr-1 h-3 w-3' />
-                      {metricheRetention.visiteMediePerPaziente} visite/pz
+                      {metricheRetention.visiteMediePerPaziente} {t.overview.visitsPerPatient}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className='pt-0'>
                   <p className='text-xs text-muted-foreground'>
-                    Valore lifetime medio: {formatCurrency(metricheRetention.valoreLifetimeMedio)}
+                    {t.overview.lifetimeValue}:{' '}
+                    {formatCurrency(metricheRetention.valoreLifetimeMedio)}
                   </p>
                 </CardFooter>
               </Card>
@@ -196,7 +203,7 @@ export default function OverViewPage() {
                 <RecentSales />
               </Card>
               <Card className='p-6'>
-                <h3 className='font-semibold mb-4'>Prossimi Appuntamenti</h3>
+                <h3 className='font-semibold mb-4'>{t.overview.upcomingAppointments}</h3>
                 <div className='space-y-3'>
                   <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
                     <div className='flex items-center gap-3'>
@@ -210,7 +217,7 @@ export default function OverViewPage() {
                     </div>
                     <div className='text-right'>
                       <p className='text-sm font-medium'>09:30</p>
-                      <p className='text-xs text-muted-foreground'>Oggi</p>
+                      <p className='text-xs text-muted-foreground'>{t.overview.today}</p>
                     </div>
                   </div>
                   <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
@@ -225,7 +232,7 @@ export default function OverViewPage() {
                     </div>
                     <div className='text-right'>
                       <p className='text-sm font-medium'>18:00</p>
-                      <p className='text-xs text-muted-foreground'>Oggi</p>
+                      <p className='text-xs text-muted-foreground'>{t.overview.today}</p>
                     </div>
                   </div>
                   <div className='flex items-center justify-between p-3 bg-secondary-50 rounded-lg'>
@@ -240,7 +247,7 @@ export default function OverViewPage() {
                     </div>
                     <div className='text-right'>
                       <p className='text-sm font-medium'>10:30</p>
-                      <p className='text-xs text-muted-foreground'>Domani</p>
+                      <p className='text-xs text-muted-foreground'>{t.overview.tomorrow}</p>
                     </div>
                   </div>
                 </div>
@@ -259,13 +266,11 @@ export default function OverViewPage() {
             <Card className='p-8'>
               <div className='text-center'>
                 <Icons.file className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
-                <h3 className='text-lg font-semibold mb-2'>Report Mensile</h3>
-                <p className='text-muted-foreground mb-4'>
-                  Genera e scarica il report completo del mese
-                </p>
+                <h3 className='text-lg font-semibold mb-2'>{t.overview.reportMonthly}</h3>
+                <p className='text-muted-foreground mb-4'>{t.overview.reportDesc}</p>
                 <Button className='gap-2'>
                   <Icons.arrowRight className='h-4 w-4' />
-                  Genera Report
+                  {t.overview.generateReport}
                 </Button>
               </div>
             </Card>

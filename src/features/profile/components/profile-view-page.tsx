@@ -1,16 +1,20 @@
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useT } from '@/lib/i18n/store';
 
 export default function ProfileViewPage() {
+  const t = useT();
   return (
     <div className='container mx-auto py-10'>
       <Card>
         <CardHeader>
-          <CardTitle>Profilo Demo</CardTitle>
-          <CardDescription>Modalità demo - autenticazione disabilitata</CardDescription>
+          <CardTitle>{t.profile.title}</CardTitle>
+          <CardDescription>{t.profile.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>Utente: Demo User</p>
+          <p>
+            {t.profile.userLabel}: {t.profile.userValue}
+          </p>
           <p>Email: demo@medianalytics.pro</p>
         </CardContent>
       </Card>

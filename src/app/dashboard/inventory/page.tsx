@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { InventoryTable } from '@/features/inventory/components/inventory-table';
 
 export const metadata: Metadata = {
-  title: 'Inventario | MediAnalytics Pro',
-  description: 'Gestione inventario e materiali'
+  title: 'Inventory | MediAnalytics Pro',
+  description: 'Inventory and materials management'
 };
 
 export default function InventoryPage() {

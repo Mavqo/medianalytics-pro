@@ -1,3 +1,4 @@
+'use client';
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Icons } from '@/components/icons';
 import React from 'react';
+import { useT } from '@/lib/i18n/store';
 
 export default function OverViewLayout({
   sales,
@@ -22,17 +24,18 @@ export default function OverViewLayout({
   bar_stats: React.ReactNode;
   area_stats: React.ReactNode;
 }) {
+  const t = useT();
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-2xl font-bold tracking-tight'>Bentornato 👋</h2>
+          <h2 className='text-2xl font-bold tracking-tight'>{t.overview.welcomeBack}</h2>
         </div>
 
         <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Fatturato Mensile</CardDescription>
+              <CardDescription>{t.overview.revenueMonthly}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 €31.200
               </CardTitle>
@@ -45,14 +48,14 @@ export default function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                In crescita questo mese <Icons.trendingUp className='size-4' />
+                {t.overview.growingThisMonth} <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Obiettivo mensile superato</div>
+              <div className='text-muted-foreground'>{t.overview.monthlyGoalExceeded}</div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Pazienti Attivi</CardDescription>
+              <CardDescription>{t.overview.activePatients}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 42
               </CardTitle>
@@ -65,14 +68,14 @@ export default function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                84% del totale pazienti <Icons.trendingUp className='size-4' />
+                {t.overview.ofTotalPatients} <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>50 pazienti in archivio</div>
+              <div className='text-muted-foreground'>{t.overview.patientsArchived}</div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Appuntamenti Mese</CardDescription>
+              <CardDescription>{t.overview.monthAppointments}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 98
               </CardTitle>
@@ -85,14 +88,14 @@ export default function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                Agenda ben occupata <Icons.trendingUp className='size-4' />
+                {t.overview.busyAgenda} <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Media 4,6 visite per paziente</div>
+              <div className='text-muted-foreground'>{t.overview.avgVisitsPerPatient}</div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>Obiettivo Raggiunto</CardDescription>
+              <CardDescription>{t.overview.goalReachedCard}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 111,4%
               </CardTitle>
@@ -105,9 +108,9 @@ export default function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                Target mensile superato <Icons.trendingUp className='size-4' />
+                {t.overview.monthlyTargetExceeded} <Icons.trendingUp className='size-4' />
               </div>
-              <div className='text-muted-foreground'>Obiettivo: €28.000</div>
+              <div className='text-muted-foreground'>{t.overview.goalAmount}</div>
             </CardFooter>
           </Card>
         </div>

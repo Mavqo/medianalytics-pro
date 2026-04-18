@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { TherapistsGrid } from '@/features/therapists/components/therapists-grid';
 
 export const metadata: Metadata = {
-  title: 'Terapeuti | MediAnalytics Pro',
-  description: 'Gestione staff clinico'
+  title: 'Therapists | MediAnalytics Pro',
+  description: 'Clinical staff management'
 };
 
 export default function TherapistsPage() {

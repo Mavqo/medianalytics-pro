@@ -135,29 +135,29 @@ export default function PazientiPage() {
   const exportData = useMemo(() => {
     return filteredPatients.map((p) => ({
       ID: p.id,
-      Nome: `${p.nome} ${p.cognome}`,
-      Email: p.email,
-      Telefono: p.telefono,
-      Età: p.età,
-      Trattamento: p.tipoTrattamento,
-      'Ultima Visita': p.ultimaVisita ? formatDate(p.ultimaVisita) : '-',
-      'Prossima Visita': p.prossimaVisita ? formatDate(p.prossimaVisita) : '-',
-      Stato: p.stato,
-      'Spesa Totale': formatCurrency(p.spesaTotale)
+      [tr.common.name]: `${p.nome} ${p.cognome}`,
+      [tr.common.email]: p.email,
+      [tr.common.phone]: p.telefono,
+      [tr.pazienti.age]: p.età,
+      [tr.pazienti.treatment]: p.tipoTrattamento,
+      [tr.pazienti.lastVisit]: p.ultimaVisita ? formatDate(p.ultimaVisita) : '-',
+      [tr.pazienti.nextVisit]: p.prossimaVisita ? formatDate(p.prossimaVisita) : '-',
+      [tr.common.status]: p.stato,
+      [tr.pazienti.totalSpend]: formatCurrency(p.spesaTotale)
     }));
-  }, [filteredPatients]);
+  }, [filteredPatients, tr]);
 
   const csvHeaders = [
     'ID',
-    'Nome',
-    'Email',
-    'Telefono',
-    'Età',
-    'Trattamento',
-    'Ultima Visita',
-    'Prossima Visita',
-    'Stato',
-    'Spesa Totale'
+    tr.common.name,
+    tr.common.email,
+    tr.common.phone,
+    tr.pazienti.age,
+    tr.pazienti.treatment,
+    tr.pazienti.lastVisit,
+    tr.pazienti.nextVisit,
+    tr.common.status,
+    tr.pazienti.totalSpend
   ];
 
   return (
