@@ -20,6 +20,17 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { patients, Patient } from '@/lib/data/patients';
@@ -73,6 +84,7 @@ export default function PazientiPage() {
   const [treatmentFilter, setTreatmentFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [newPatientOpen, setNewPatientOpen] = useState(false);
 
   // Get unique treatment types
   const treatmentTypes = useMemo(() => {
@@ -154,10 +166,11 @@ export default function PazientiPage() {
           </div>
           <div className='flex items-center gap-2'>
             <ExportMenu data={exportData} filename='pazienti-medianalytics' headers={csvHeaders} />
-            <Button className='gap-2 bg-primary hover:bg-primary-700'>
-              <Icons.plus className='h-4 w-4' />
-              Nuovo Paziente
-            </Button>
+            <NewPatientDialog
+              open={newPatientOpen}
+              onOpenChange={setNewPatientOpen}
+              treatmentTypes={treatmentTypes}
+            />
           </div>
         </div>
 
@@ -416,5 +429,92 @@ export default function PazientiPage() {
         </div>
       </div>
     </PageContainer>
+  );
+}
+
+function NewPatientDialog({
+  open,
+  onOpenChange,
+  treatmentTypes
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  treatmentTypes: string[];
+}) {
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <Button className='gap-2 bg-primary hover:bg-primary-700'>
+          <Icons.plus className='h-4 w-4' />
+          Nuovo Paziente
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-[560px]'>
+        <DialogHeader>
+          <DialogTitle>Nuovo paziente</DialogTitle>
+          <DialogDescription>
+            Registra un nuovo paziente. Compila i dati anagrafici e clinici essenziali.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className='grid gap-4 md:grid-cols-2'>
+          <div>
+            <Label className='mb-1.5 block'>Nome</Label>
+            <Input placeholder='Mario' />
+          </div>
+          <div>
+            <Label className='mb-1.5 block'>Cognome</Label>
+            <Input placeholder='Rossi' />
+          </div>
+          <div>
+            <Label className='mb-1.5 block'>Data di nascita</Label>
+            <Input type='date' />
+          </div>
+          <div>
+            <Label className='mb-1.5 block'>Codice Fiscale</Label>
+            <Input placeholder='RSSMRA85M01H501Z' />
+          </div>
+          <div>
+            <Label className='mb-1.5 block'>Email</Label>
+            <Input type='email' placeholder='mario.rossi@email.it' />
+          </div>
+          <div>
+            <Label className='mb-1.5 block'>Telefono</Label>
+            <Input type='tel' placeholder='+39 333 123 4567' />
+          </div>
+          <div className='md:col-span-2'>
+            <Label className='mb-1.5 block'>Tipo trattamento</Label>
+            <Select defaultValue={treatmentTypes[0]}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {treatmentTypes.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className='md:col-span-2'>
+            <Label className='mb-1.5 block'>Note cliniche</Label>
+            <Textarea placeholder='Anamnesi, patologie, allergie...' rows={3} />
+          </div>
+          <DialogFooter className='md:col-span-2'>
+            <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
+              Annulla
+            </Button>
+            <Button type='submit' className='bg-primary hover:bg-primary-700'>
+              Registra paziente
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,30 +1,53 @@
 # MediAnalytics Pro
 
-Dashboard for physiotherapy and wellness centers. Patient management, appointments, billing, analytics, therapist views, inventory, and notifications.
+Demo dashboard per una clinica di fisioterapia. Progetto portfolio realizzato con Next.js 16 e React 19.
 
-Frontend prototype — realistic data, ready to wire up to a backend.
+## Funzionalità
 
-Built with Next.js 16, React 19, Tailwind CSS 4, shadcn/ui, Recharts, Zustand.
+- **Overview** — KPI clinica, grafici ricavi e distribuzione trattamenti
+- **Pazienti** — anagrafica, filtri, ricerca, dialog "Nuovo Paziente"
+- **Appuntamenti** — agenda sedute, stati, dialog "Nuovo Appuntamento"
+- **Trattamenti** — catalogo prestazioni con prezzi e durata
+- **Terapeuti** — staff clinica con specializzazioni e disponibilità
+- **Inventario** — materiali, scorte, soglie di riordino
+- **Analytics** — metriche avanzate, trend mensili, performance terapeuti
+- **Fatturazione** — fatture emesse, stati pagamento, dialog "Nuova Fattura"
+- **Impostazioni** — profilo clinica, preferenze, notifiche
 
-## Run locally
+## Stack
+
+- Next.js 16 (App Router) + React 19
+- Tailwind CSS 4 + shadcn/ui
+- Recharts per i grafici
+- Zustand per lo state client
+- Bun come runtime e package manager
+
+## Avvio rapido
 
 ```bash
-npm install && npm run dev
-# or
-bun install && bun run dev
+bun install
+bun run dev
 ```
 
-Build: `npm run build && npm run start`
+Apri [http://localhost:3000](http://localhost:3000).
 
-## Structure
+Build di produzione:
+
+```bash
+bun run build
+bun run start
+```
+
+## Struttura
 
 ```
 src/
-├── app/          Next.js routes and pages
-├── components/   Shared UI and layout
-├── config/       Nav and dashboard config
-├── features/     Domain modules (patients, billing, etc.)
-├── lib/          Data and utilities
-├── styles/       Theme and variants
-└── hooks/        Custom hooks
+├── app/dashboard/    # route App Router
+├── features/         # componenti per dominio
+├── components/ui/    # primitive shadcn/ui
+└── lib/data/         # dataset mock (pazienti, appuntamenti, ...)
 ```
+
+## Note
+
+Progetto **dimostrativo**: dati mock, form non persistono, auth e pagamenti simulati. Pensato per mostrare competenze UI/UX, architettura feature-based e uso idiomatico di Next.js + shadcn/ui.
