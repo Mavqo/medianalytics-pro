@@ -2,45 +2,40 @@
 
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+import { useT } from '@/lib/i18n/store';
 
 type BreadcrumbItem = {
   title: string;
   link: string;
 };
 
-// This allows to add custom title as well
-const routeMapping: Record<string, BreadcrumbItem[]> = {
-  '/dashboard': [{ title: 'Dashboard', link: '/dashboard' }],
-  '/dashboard/employee': [
-    { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Employee', link: '/dashboard/employee' }
-  ],
-  '/dashboard/product': [
-    { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Product', link: '/dashboard/product' }
-  ]
-  // Add more custom mappings as needed
-};
-
 export function useBreadcrumbs() {
   const pathname = usePathname();
+  const t = useT();
 
-  const breadcrumbs = useMemo(() => {
-    // Check if we have a custom mapping for this exact path
-    if (routeMapping[pathname]) {
-      return routeMapping[pathname];
-    }
+  const breadcrumbs = useMemo<BreadcrumbItem[]>(() => {
+    const segmentMap: Record<string, string> = {
+      dashboard: t.common.dashboard,
+      overview: t.nav.overview,
+      pazienti: t.nav.pazienti,
+      appointments: t.nav.appointments,
+      billing: t.nav.billing,
+      analytics: t.nav.analytics,
+      therapists: t.nav.therapists,
+      treatments: t.nav.treatments,
+      inventory: t.nav.inventory,
+      settings: t.nav.settings,
+      profile: t.common.profile,
+      notifications: t.common.notifications
+    };
 
-    // If no exact match, fall back to generating breadcrumbs from the path
     const segments = pathname.split('/').filter(Boolean);
     return segments.map((segment, index) => {
       const path = `/${segments.slice(0, index + 1).join('/')}`;
-      return {
-        title: segment.charAt(0).toUpperCase() + segment.slice(1),
-        link: path
-      };
+      const title = segmentMap[segment] ?? segment.charAt(0).toUpperCase() + segment.slice(1);
+      return { title, link: path };
     });
-  }, [pathname]);
+  }, [pathname, t]);
 
   return breadcrumbs;
 }

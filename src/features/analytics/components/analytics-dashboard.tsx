@@ -37,6 +37,7 @@ import {
   visitePerGiorno,
   visitePerTipo
 } from '@/lib/data/analytics';
+import { useT } from '@/lib/i18n/store';
 
 const PIE_COLORS = ['#14b8a6', '#f97316', '#6366f1', '#ec4899', '#eab308'];
 
@@ -70,6 +71,7 @@ const reviewsConfig = {
 const euroFmt = (n: number) => `€${n.toLocaleString('it-IT')}`;
 
 export function AnalyticsDashboard() {
+  const t = useT();
   const topTherapist = topTerapeuti[0];
   const revenueYTD = fatturatoMensile.reduce((a, c) => a + c.fatturato, 0);
 
@@ -77,10 +79,8 @@ export function AnalyticsDashboard() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Analytics</h1>
-          <p className='text-sm text-muted-foreground'>
-            Analisi approfondite delle performance del centro
-          </p>
+          <h1 className='text-3xl font-bold tracking-tight'>{t.analytics.title}</h1>
+          <p className='text-sm text-muted-foreground'>{t.analytics.deepAnalysis}</p>
         </div>
         <div className='flex items-center gap-2'>
           <Tabs defaultValue='12m'>
@@ -91,32 +91,32 @@ export function AnalyticsDashboard() {
             </TabsList>
           </Tabs>
           <Button variant='outline' size='sm' className='gap-2'>
-            <Download className='h-4 w-4' /> Esporta
+            <Download className='h-4 w-4' /> {t.analytics.export}
           </Button>
         </div>
       </div>
 
       <div className='grid gap-4 md:grid-cols-4'>
         <KpiCard
-          label='Tasso Retention'
+          label={t.analytics.retentionRate}
           value={`${metricheRetention.tassoRetention}%`}
-          hint='+2.3% vs mese scorso'
+          hint='+2.3%'
           positive
         />
         <KpiCard
-          label='Media Visite / Paziente'
+          label={t.analytics.avgVisits}
           value={metricheRetention.visiteMediePerPaziente.toString()}
-          hint='+0.5 vs mese scorso'
+          hint='+0.5'
           positive
         />
         <KpiCard
-          label='Valore LTV Medio'
+          label={t.analytics.ltvValue}
           value={euroFmt(metricheRetention.valoreLifetimeMedio)}
-          hint='+€42 vs mese scorso'
+          hint='+€42'
           positive
         />
         <KpiCard
-          label='Tasso No-Show'
+          label={t.analytics.noShowRate}
           value={`${statisticheGiornaliere.tassoNoShow}%`}
           hint='-0.5% vs mese scorso'
           positive

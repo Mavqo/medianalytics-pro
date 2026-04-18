@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Clock, Euro, Plus, Search, Sparkles } from 'lucide-react';
 import { categorieTrattamenti, trattamenti } from '@/lib/data/treatments';
+import { useT } from '@/lib/i18n/store';
 
 const categoryColor: Record<string, string> = {
   Fisioterapia: 'bg-teal-100 text-teal-800 border-teal-200',
@@ -36,6 +37,7 @@ const categoryColor: Record<string, string> = {
 };
 
 export function TreatmentsCatalog() {
+  const tr = useT();
   const [query, setQuery] = useState('');
   const [categoria, setCategoria] = useState<string>('Tutti');
 
@@ -61,19 +63,23 @@ export function TreatmentsCatalog() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Trattamenti</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{tr.treatments.title}</h1>
           <p className='text-sm text-muted-foreground'>
-            Catalogo completo dei servizi del centro — {trattamenti.length} trattamenti attivi
+            {tr.treatments.fullCatalog} — {trattamenti.length}{' '}
+            {tr.treatments.activeTreatments.toLowerCase()}
           </p>
         </div>
         <NewTreatmentDialog />
       </div>
 
       <div className='grid gap-4 md:grid-cols-4'>
-        <StatCard label='Trattamenti attivi' value={trattamenti.length.toString()} />
-        <StatCard label='Categorie' value={(categorieTrattamenti.length - 1).toString()} />
-        <StatCard label='Prezzo medio' value={`€${prezzoMedio}`} />
-        <StatCard label='Durata media' value={`${durataMedia} min`} />
+        <StatCard label={tr.treatments.activeTreatments} value={trattamenti.length.toString()} />
+        <StatCard
+          label={tr.treatments.categories}
+          value={(categorieTrattamenti.length - 1).toString()}
+        />
+        <StatCard label={tr.treatments.avgPrice} value={`€${prezzoMedio}`} />
+        <StatCard label={tr.treatments.avgDuration} value={`${durataMedia} min`} />
       </div>
 
       <Card>
@@ -81,7 +87,7 @@ export function TreatmentsCatalog() {
           <div className='relative flex-1 min-w-[240px]'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <Input
-              placeholder='Cerca trattamento...'
+              placeholder={tr.treatments.searchPlaceholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className='pl-9'
@@ -94,7 +100,7 @@ export function TreatmentsCatalog() {
             <SelectContent>
               {categorieTrattamenti.map((c) => (
                 <SelectItem key={c} value={c}>
-                  {c}
+                  {c === 'Tutti' ? tr.common.all : c}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -105,9 +111,7 @@ export function TreatmentsCatalog() {
       {filtered.length === 0 ? (
         <Card>
           <CardContent className='flex flex-col items-center gap-2 py-12 text-center'>
-            <p className='text-sm text-muted-foreground'>
-              Nessun trattamento corrisponde ai filtri.
-            </p>
+            <p className='text-sm text-muted-foreground'>{tr.treatments.noResults}</p>
           </CardContent>
         </Card>
       ) : (
@@ -124,7 +128,7 @@ export function TreatmentsCatalog() {
                   </div>
                   {t.popolare && (
                     <Badge className='gap-1 bg-amber-500 hover:bg-amber-500'>
-                      <Sparkles className='h-3 w-3' /> Popolare
+                      <Sparkles className='h-3 w-3' /> {tr.treatments.popular}
                     </Badge>
                   )}
                 </div>
@@ -138,14 +142,16 @@ export function TreatmentsCatalog() {
                   <span className='flex items-center gap-1'>
                     <Euro className='h-4 w-4' /> {t.prezzo}
                   </span>
-                  <span className='ml-auto text-xs'>~{t.sessioniMedie} sessioni</span>
+                  <span className='ml-auto text-xs'>
+                    ~{t.sessioniMedie} {tr.treatments.sessions}
+                  </span>
                 </div>
                 <div className='flex gap-2'>
                   <Button variant='outline' size='sm' className='flex-1'>
-                    Dettagli
+                    {tr.treatments.details}
                   </Button>
                   <Button size='sm' className='flex-1'>
-                    Prenota
+                    {tr.treatments.book}
                   </Button>
                 </div>
               </CardContent>
@@ -169,19 +175,18 @@ function StatCard({ label, value }: { label: string; value: string }) {
 }
 
 function NewTreatmentDialog() {
+  const tr = useT();
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className='gap-2'>
-          <Plus className='h-4 w-4' /> Nuovo Trattamento
+          <Plus className='h-4 w-4' /> {tr.treatments.newTreatment}
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[520px]'>
         <DialogHeader>
-          <DialogTitle>Nuovo Trattamento</DialogTitle>
-          <DialogDescription>
-            Aggiungi un servizio al catalogo. Demo — i dati non vengono salvati.
-          </DialogDescription>
+          <DialogTitle>{tr.treatments.newTreatment}</DialogTitle>
+          <DialogDescription>{tr.treatments.newTreatmentDesc}</DialogDescription>
         </DialogHeader>
         <form
           className='grid gap-4 py-2'
@@ -190,12 +195,12 @@ function NewTreatmentDialog() {
           }}
         >
           <div className='grid gap-2'>
-            <Label htmlFor='nome'>Nome</Label>
-            <Input id='nome' placeholder='Es. Terapia Manuale' required />
+            <Label htmlFor='nome'>{tr.common.name}</Label>
+            <Input id='nome' required />
           </div>
           <div className='grid grid-cols-2 gap-4'>
             <div className='grid gap-2'>
-              <Label htmlFor='categoria'>Categoria</Label>
+              <Label htmlFor='categoria'>{tr.common.category}</Label>
               <Select defaultValue='Fisioterapia'>
                 <SelectTrigger id='categoria'>
                   <SelectValue />
@@ -212,25 +217,25 @@ function NewTreatmentDialog() {
               </Select>
             </div>
             <div className='grid gap-2'>
-              <Label htmlFor='durata'>Durata (min)</Label>
+              <Label htmlFor='durata'>{tr.treatments.durationMin}</Label>
               <Input id='durata' type='number' defaultValue={50} min={10} />
             </div>
           </div>
           <div className='grid gap-2'>
-            <Label htmlFor='prezzo'>Prezzo (€)</Label>
+            <Label htmlFor='prezzo'>{tr.treatments.priceEur}</Label>
             <Input id='prezzo' type='number' defaultValue={75} min={0} />
           </div>
           <div className='grid gap-2'>
-            <Label htmlFor='descrizione'>Descrizione</Label>
-            <Textarea id='descrizione' rows={3} placeholder='Descrivi il trattamento...' />
+            <Label htmlFor='descrizione'>{tr.billing.description}</Label>
+            <Textarea id='descrizione' rows={3} placeholder={tr.treatments.describeTreatment} />
           </div>
         </form>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant='outline'>Annulla</Button>
+            <Button variant='outline'>{tr.common.cancel}</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button>Crea</Button>
+            <Button>{tr.common.create}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

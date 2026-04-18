@@ -35,6 +35,7 @@ import { CalendarDays, CheckCircle2, Clock, Euro, Plus, Search } from 'lucide-re
 import { appointments, type Appointment } from '@/lib/data/appointments';
 import { terapeuti } from '@/lib/data/therapists';
 import { trattamenti } from '@/lib/data/treatments';
+import { useT } from '@/lib/i18n/store';
 
 const statoStyles: Record<Appointment['stato'], string> = {
   confermato: 'bg-emerald-100 text-emerald-700 border-emerald-200',
@@ -43,16 +44,16 @@ const statoStyles: Record<Appointment['stato'], string> = {
   'no-show': 'bg-slate-200 text-slate-700 border-slate-300'
 };
 
-const statoLabel: Record<Appointment['stato'], string> = {
-  confermato: 'Confermato',
-  completato: 'Completato',
-  cancellato: 'Cancellato',
-  'no-show': 'No-show'
-};
-
 const stati = ['Tutti', 'confermato', 'completato', 'cancellato', 'no-show'] as const;
 
 export function AppointmentsTable() {
+  const t = useT();
+  const statoLabel: Record<Appointment['stato'], string> = {
+    confermato: t.appointments.statusConfirmed,
+    completato: t.appointments.statusCompleted,
+    cancellato: t.appointments.statusCancelled,
+    'no-show': t.appointments.statusNoShow
+  };
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<(typeof stati)[number]>('Tutti');
   const [open, setOpen] = useState(false);
@@ -95,9 +96,9 @@ export function AppointmentsTable() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Appuntamenti</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{t.appointments.title}</h1>
           <p className='text-sm text-muted-foreground'>
-            Agenda trattamenti — {appointments.length} sedute registrate
+            {t.appointments.subtitle} — {appointments.length} {t.appointments.sessions}
           </p>
         </div>
         <NewAppointmentDialog open={open} onOpenChange={setOpen} />
@@ -106,31 +107,31 @@ export function AppointmentsTable() {
       <div className='grid gap-4 md:grid-cols-4'>
         <StatCard
           icon={<CalendarDays className='h-4 w-4' />}
-          label='Oggi'
+          label={t.appointments.today}
           value={stats.oggi.toString()}
-          hint='sedute in programma'
+          hint={t.appointments.sessionsPlanned}
         />
         <StatCard
           icon={<Clock className='h-4 w-4' />}
-          label='Ultimi 7 giorni'
+          label={t.appointments.last7}
           value={stats.settimana.toString()}
-          hint='sedute totali'
+          hint={t.appointments.sessionsTotal}
         />
         <StatCard
           icon={<CheckCircle2 className='h-4 w-4' />}
-          label='Completati 30gg'
+          label={t.appointments.completed30}
           value={stats.completati.toString()}
-          hint='sedute concluse'
+          hint={t.appointments.sessionsEnded}
         />
         <StatCard
           icon={<Euro className='h-4 w-4' />}
-          label='Fatturato 30gg'
+          label={t.appointments.revenue30}
           value={stats.fatturato.toLocaleString('it-IT', {
             style: 'currency',
             currency: 'EUR',
             maximumFractionDigits: 0
           })}
-          hint='da sedute completate'
+          hint={t.appointments.fromCompleted}
         />
       </div>
 
@@ -139,7 +140,7 @@ export function AppointmentsTable() {
           <div className='relative flex-1 min-w-[240px]'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <Input
-              placeholder='Cerca paziente, trattamento, terapeuta...'
+              placeholder={t.appointments.searchPlaceholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className='pl-9'
@@ -152,7 +153,7 @@ export function AppointmentsTable() {
               size='sm'
               onClick={() => setFilter(s)}
             >
-              {s === 'Tutti' ? 'Tutti' : statoLabel[s as Appointment['stato']]}
+              {s === 'Tutti' ? t.common.all : statoLabel[s as Appointment['stato']]}
             </Button>
           ))}
         </CardContent>
@@ -160,21 +161,23 @@ export function AppointmentsTable() {
 
       <Card>
         <CardHeader>
-          <CardTitle className='text-base'>Agenda ({filtered.length})</CardTitle>
-          <CardDescription>Ordinati per data più recente</CardDescription>
+          <CardTitle className='text-base'>
+            {t.appointments.agenda} ({filtered.length})
+          </CardTitle>
+          <CardDescription>{t.appointments.sortedByRecent}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Paziente</TableHead>
-                <TableHead>Data</TableHead>
-                <TableHead>Ora</TableHead>
-                <TableHead className='text-right'>Durata</TableHead>
-                <TableHead>Trattamento</TableHead>
-                <TableHead>Terapeuta</TableHead>
-                <TableHead>Stato</TableHead>
-                <TableHead className='text-right'>Costo</TableHead>
+                <TableHead>{t.appointments.patient}</TableHead>
+                <TableHead>{t.common.date}</TableHead>
+                <TableHead>{t.common.time}</TableHead>
+                <TableHead className='text-right'>{t.common.duration}</TableHead>
+                <TableHead>{t.appointments.treatment}</TableHead>
+                <TableHead>{t.appointments.therapist}</TableHead>
+                <TableHead>{t.common.status}</TableHead>
+                <TableHead className='text-right'>{t.appointments.cost}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -209,7 +212,8 @@ export function AppointmentsTable() {
           </Table>
           {filtered.length > 50 && (
             <p className='mt-3 text-center text-xs text-muted-foreground'>
-              Mostrati 50 di {filtered.length} risultati — raffina i filtri per vedere altri
+              {t.common.showing} 50 {t.common.of} {filtered.length} {t.common.results} —{' '}
+              {t.common.refine}
             </p>
           )}
         </CardContent>
@@ -249,6 +253,7 @@ function NewAppointmentDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const tr = useT();
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onOpenChange(false);
@@ -258,72 +263,70 @@ function NewAppointmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button className='gap-2'>
-          <Plus className='h-4 w-4' /> Nuovo Appuntamento
+          <Plus className='h-4 w-4' /> {tr.appointments.newAppointment}
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[520px]'>
         <DialogHeader>
-          <DialogTitle>Nuovo appuntamento</DialogTitle>
-          <DialogDescription>
-            Prenota una nuova seduta. Compila i dati essenziali.
-          </DialogDescription>
+          <DialogTitle>{tr.appointments.newAppointment}</DialogTitle>
+          <DialogDescription>{tr.appointments.newAppointmentDesc}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='grid gap-4 md:grid-cols-2'>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Paziente</Label>
-            <Input placeholder='Nome e cognome' />
+            <Label className='mb-1.5 block'>{tr.appointments.patient}</Label>
+            <Input placeholder={tr.appointments.patientPh} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Data</Label>
+            <Label className='mb-1.5 block'>{tr.common.date}</Label>
             <Input type='date' defaultValue={new Date().toISOString().slice(0, 10)} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Ora</Label>
+            <Label className='mb-1.5 block'>{tr.common.time}</Label>
             <Input type='time' defaultValue='09:00' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Durata (min)</Label>
+            <Label className='mb-1.5 block'>{tr.treatments.durationMin}</Label>
             <Input type='number' defaultValue={45} min={15} step={15} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Trattamento</Label>
+            <Label className='mb-1.5 block'>{tr.appointments.treatment}</Label>
             <Select defaultValue={trattamenti[0]?.nome}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {trattamenti.slice(0, 10).map((t) => (
-                  <SelectItem key={t.id} value={t.nome}>
-                    {t.nome}
+                {trattamenti.slice(0, 10).map((it) => (
+                  <SelectItem key={it.id} value={it.nome}>
+                    {it.nome}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Terapeuta</Label>
+            <Label className='mb-1.5 block'>{tr.appointments.therapist}</Label>
             <Select defaultValue={terapeuti[0]?.nome}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {terapeuti.map((t) => (
-                  <SelectItem key={t.id} value={t.nome}>
-                    {t.nome}
+                {terapeuti.map((it) => (
+                  <SelectItem key={it.id} value={it.nome}>
+                    {it.nome}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Note</Label>
-            <Textarea placeholder='Note opzionali sulla seduta' rows={3} />
+            <Label className='mb-1.5 block'>{tr.common.notes}</Label>
+            <Textarea rows={3} />
           </div>
           <DialogFooter className='md:col-span-2'>
             <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-              Annulla
+              {tr.common.cancel}
             </Button>
-            <Button type='submit'>Prenota</Button>
+            <Button type='submit'>{tr.appointments.book}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

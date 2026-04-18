@@ -25,16 +25,18 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
-import { navGroups } from '@/config/nav-config';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useFilteredNavGroups } from '@/hooks/use-nav';
+import { useTranslatedNavGroups } from '@/hooks/use-translated-nav';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
+import { useT } from '@/lib/i18n/store';
 
 export default function AppSidebar() {
+  const t = useT();
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
   const user = {
@@ -44,7 +46,8 @@ export default function AppSidebar() {
   };
   const organization = null;
   const router = useRouter();
-  const filteredGroups = useFilteredNavGroups(navGroups);
+  const translatedGroups = useTranslatedNavGroups();
+  const filteredGroups = useFilteredNavGroups(translatedGroups);
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -144,24 +147,24 @@ export default function AppSidebar() {
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
                     <Icons.account className='mr-2 h-4 w-4' />
-                    Profile
+                    {t.common.profile}
                   </DropdownMenuItem>
                   {organization && (
                     <DropdownMenuItem onClick={() => router.push('/dashboard/billing')}>
                       <Icons.creditCard className='mr-2 h-4 w-4' />
-                      Billing
+                      {t.nav.billing}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')}>
                     <Icons.notification className='mr-2 h-4 w-4' />
-                    Notifications
+                    {t.common.notifications}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <Icons.logout className='mr-2 h-4 w-4' />
                   <span onClick={() => (window.location.href = '/')} className='cursor-pointer'>
-                    Esci
+                    {t.common.logout}
                   </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

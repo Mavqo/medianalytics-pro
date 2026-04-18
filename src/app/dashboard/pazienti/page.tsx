@@ -35,13 +35,21 @@ import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/icons';
 import { patients, Patient } from '@/lib/data/patients';
 import { ExportMenu } from '@/components/ui/export-menu';
+import { useT } from '@/lib/i18n/store';
 
 // Status badge component
 const StatusBadge = ({ status }: { status: Patient['stato'] }) => {
+  const tr = useT();
   const variants = {
     attivo: 'bg-primary-100 text-primary-700 hover:bg-primary-100',
     completato: 'bg-success-100 text-success-700 hover:bg-success-100',
     'in attesa': 'bg-warning-100 text-warning-700 hover:bg-warning-100'
+  };
+
+  const labels: Record<Patient['stato'], string> = {
+    attivo: tr.common.active,
+    completato: tr.pazienti.completed,
+    'in attesa': tr.pazienti.waiting
   };
 
   const icons = {
@@ -53,7 +61,7 @@ const StatusBadge = ({ status }: { status: Patient['stato'] }) => {
   return (
     <Badge variant='outline' className={variants[status]}>
       {icons[status]}
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+      {labels[status]}
     </Badge>
   );
 };
@@ -79,6 +87,7 @@ const formatDate = (dateStr: string | null) => {
 };
 
 export default function PazientiPage() {
+  const tr = useT();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [treatmentFilter, setTreatmentFilter] = useState<string>('all');
@@ -158,10 +167,10 @@ export default function PazientiPage() {
         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight text-secondary-900'>
-              Gestione Pazienti
+              {tr.pazienti.manage}
             </h2>
             <p className='text-muted-foreground'>
-              {filteredPatients.length} pazienti trovati su {patients.length} totali
+              {filteredPatients.length} {tr.pazienti.foundOf} {patients.length} {tr.pazienti.total2}
             </p>
           </div>
           <div className='flex items-center gap-2'>
@@ -181,7 +190,7 @@ export default function PazientiPage() {
               <div className='relative flex-1'>
                 <Icons.search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
                 <Input
-                  placeholder='Cerca per nome, email o ID...'
+                  placeholder={tr.pazienti.searchPlaceholder}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className='pl-9'
@@ -190,21 +199,21 @@ export default function PazientiPage() {
               <div className='flex gap-2'>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className='w-[140px]'>
-                    <SelectValue placeholder='Stato' />
+                    <SelectValue placeholder={tr.common.status} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>Tutti gli stati</SelectItem>
-                    <SelectItem value='attivo'>Attivo</SelectItem>
-                    <SelectItem value='completato'>Completato</SelectItem>
-                    <SelectItem value='in attesa'>In attesa</SelectItem>
+                    <SelectItem value='all'>{tr.pazienti.allStatus}</SelectItem>
+                    <SelectItem value='attivo'>{tr.common.active}</SelectItem>
+                    <SelectItem value='completato'>{tr.pazienti.completed}</SelectItem>
+                    <SelectItem value='in attesa'>{tr.pazienti.waiting}</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={treatmentFilter} onValueChange={setTreatmentFilter}>
                   <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Trattamento' />
+                    <SelectValue placeholder={tr.pazienti.treatment} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>Tutti i trattamenti</SelectItem>
+                    <SelectItem value='all'>{tr.pazienti.allTreatments}</SelectItem>
                     {treatmentTypes.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
@@ -220,20 +229,22 @@ export default function PazientiPage() {
         {/* Patients Table */}
         <Card>
           <CardHeader className='pb-0'>
-            <CardTitle className='text-lg'>Elenco Pazienti</CardTitle>
-            <CardDescription>Visualizza e gestisci tutti i pazienti del centro</CardDescription>
+            <CardTitle className='text-lg'>{tr.pazienti.list}</CardTitle>
+            <CardDescription>{tr.pazienti.listDesc}</CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <div className='overflow-x-auto'>
               <Table>
                 <TableHeader>
                   <TableRow className='bg-secondary-50 hover:bg-secondary-50'>
-                    <TableHead className='font-semibold'>Paziente</TableHead>
-                    <TableHead className='font-semibold'>Età</TableHead>
-                    <TableHead className='font-semibold'>Trattamento</TableHead>
-                    <TableHead className='font-semibold'>Ultima Visita</TableHead>
-                    <TableHead className='font-semibold'>Stato</TableHead>
-                    <TableHead className='font-semibold text-right'>Spesa Totale</TableHead>
+                    <TableHead className='font-semibold'>{tr.pazienti.patient}</TableHead>
+                    <TableHead className='font-semibold'>{tr.pazienti.age}</TableHead>
+                    <TableHead className='font-semibold'>{tr.pazienti.treatment}</TableHead>
+                    <TableHead className='font-semibold'>{tr.pazienti.lastVisit}</TableHead>
+                    <TableHead className='font-semibold'>{tr.common.status}</TableHead>
+                    <TableHead className='font-semibold text-right'>
+                      {tr.pazienti.totalSpend}
+                    </TableHead>
                     <TableHead className='w-[50px]'></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -242,7 +253,7 @@ export default function PazientiPage() {
                     <TableRow>
                       <TableCell colSpan={7} className='text-center py-8 text-muted-foreground'>
                         <Icons.search className='h-8 w-8 mx-auto mb-2 opacity-50' />
-                        Nessun paziente trovato con i filtri selezionati
+                        {tr.pazienti.noResults}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -264,7 +275,9 @@ export default function PazientiPage() {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>{patient.età} anni</TableCell>
+                        <TableCell>
+                          {patient.età} {tr.pazienti.yearsOld}
+                        </TableCell>
                         <TableCell>
                           <span className='text-sm'>{patient.tipoTrattamento}</span>
                         </TableCell>
@@ -300,9 +313,9 @@ export default function PazientiPage() {
             {filteredPatients.length > 0 && (
               <div className='flex items-center justify-between px-6 py-4 border-t border-secondary-100'>
                 <div className='text-sm text-muted-foreground'>
-                  Mostrando {(currentPage - 1) * rowsPerPage + 1}-
-                  {Math.min(currentPage * rowsPerPage, filteredPatients.length)} di{' '}
-                  {filteredPatients.length} pazienti
+                  {tr.common.showing} {(currentPage - 1) * rowsPerPage + 1}-
+                  {Math.min(currentPage * rowsPerPage, filteredPatients.length)} {tr.common.of}{' '}
+                  {filteredPatients.length} {tr.pazienti.patientsUnit}
                 </div>
                 <div className='flex items-center gap-4'>
                   <Select
@@ -328,7 +341,7 @@ export default function PazientiPage() {
                       onClick={() => setCurrentPage(1)}
                       disabled={currentPage === 1}
                     >
-                      Prima
+                      {tr.common.first}
                     </Button>
                     <Button
                       variant='outline'
@@ -336,10 +349,10 @@ export default function PazientiPage() {
                       onClick={() => setCurrentPage((p) => p - 1)}
                       disabled={currentPage === 1}
                     >
-                      Precedente
+                      {tr.common.previous}
                     </Button>
                     <span className='px-3 py-1 text-sm'>
-                      Pagina {currentPage} di {totalPages}
+                      {tr.common.page} {currentPage} {tr.common.of} {totalPages}
                     </span>
                     <Button
                       variant='outline'
@@ -347,7 +360,7 @@ export default function PazientiPage() {
                       onClick={() => setCurrentPage((p) => p + 1)}
                       disabled={currentPage >= totalPages}
                     >
-                      Successiva
+                      {tr.common.next}
                     </Button>
                     <Button
                       variant='outline'
@@ -355,7 +368,7 @@ export default function PazientiPage() {
                       onClick={() => setCurrentPage(totalPages)}
                       disabled={currentPage >= totalPages}
                     >
-                      Ultima
+                      {tr.common.last}
                     </Button>
                   </div>
                 </div>
@@ -370,7 +383,7 @@ export default function PazientiPage() {
             <CardContent className='p-4'>
               <div className='flex items-center justify-between'>
                 <div>
-                  <p className='text-sm text-muted-foreground'>Pazienti Attivi</p>
+                  <p className='text-sm text-muted-foreground'>{tr.pazienti.activePatients}</p>
                   <p className='text-2xl font-bold text-primary'>
                     {patients.filter((p) => p.stato === 'attivo').length}
                   </p>
@@ -385,7 +398,7 @@ export default function PazientiPage() {
             <CardContent className='p-4'>
               <div className='flex items-center justify-between'>
                 <div>
-                  <p className='text-sm text-muted-foreground'>Terapie Completate</p>
+                  <p className='text-sm text-muted-foreground'>{tr.pazienti.completedTherapies}</p>
                   <p className='text-2xl font-bold text-success'>
                     {patients.filter((p) => p.stato === 'completato').length}
                   </p>
@@ -400,7 +413,7 @@ export default function PazientiPage() {
             <CardContent className='p-4'>
               <div className='flex items-center justify-between'>
                 <div>
-                  <p className='text-sm text-muted-foreground'>In Attesa</p>
+                  <p className='text-sm text-muted-foreground'>{tr.pazienti.waitingLabel}</p>
                   <p className='text-2xl font-bold text-warning'>
                     {patients.filter((p) => p.stato === 'in attesa').length}
                   </p>
@@ -415,7 +428,7 @@ export default function PazientiPage() {
             <CardContent className='p-4'>
               <div className='flex items-center justify-between'>
                 <div>
-                  <p className='text-sm text-muted-foreground'>Fatturato Totale</p>
+                  <p className='text-sm text-muted-foreground'>{tr.pazienti.totalRevenue}</p>
                   <p className='text-2xl font-bold text-secondary-900'>
                     {formatCurrency(patients.reduce((acc, p) => acc + p.spesaTotale, 0))}
                   </p>
@@ -441,6 +454,7 @@ function NewPatientDialog({
   onOpenChange: (v: boolean) => void;
   treatmentTypes: string[];
 }) {
+  const tr = useT();
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onOpenChange(false);
@@ -451,66 +465,64 @@ function NewPatientDialog({
       <DialogTrigger asChild>
         <Button className='gap-2 bg-primary hover:bg-primary-700'>
           <Icons.plus className='h-4 w-4' />
-          Nuovo Paziente
+          {tr.pazienti.newPatient}
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[560px]'>
         <DialogHeader>
-          <DialogTitle>Nuovo paziente</DialogTitle>
-          <DialogDescription>
-            Registra un nuovo paziente. Compila i dati anagrafici e clinici essenziali.
-          </DialogDescription>
+          <DialogTitle>{tr.pazienti.newPatient}</DialogTitle>
+          <DialogDescription>{tr.pazienti.newPatientDesc}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='grid gap-4 md:grid-cols-2'>
           <div>
-            <Label className='mb-1.5 block'>Nome</Label>
+            <Label className='mb-1.5 block'>{tr.common.name}</Label>
             <Input placeholder='Mario' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Cognome</Label>
+            <Label className='mb-1.5 block'>{tr.common.surname}</Label>
             <Input placeholder='Rossi' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Data di nascita</Label>
+            <Label className='mb-1.5 block'>{tr.pazienti.dateOfBirth}</Label>
             <Input type='date' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Codice Fiscale</Label>
+            <Label className='mb-1.5 block'>{tr.pazienti.fiscalCode}</Label>
             <Input placeholder='RSSMRA85M01H501Z' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Email</Label>
+            <Label className='mb-1.5 block'>{tr.common.email}</Label>
             <Input type='email' placeholder='mario.rossi@email.it' />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Telefono</Label>
+            <Label className='mb-1.5 block'>{tr.common.phone}</Label>
             <Input type='tel' placeholder='+39 333 123 4567' />
           </div>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Tipo trattamento</Label>
+            <Label className='mb-1.5 block'>{tr.pazienti.treatmentType}</Label>
             <Select defaultValue={treatmentTypes[0]}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {treatmentTypes.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
+                {treatmentTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Note cliniche</Label>
-            <Textarea placeholder='Anamnesi, patologie, allergie...' rows={3} />
+            <Label className='mb-1.5 block'>{tr.pazienti.clinicalNotes}</Label>
+            <Textarea placeholder={tr.pazienti.clinicalNotesPh} rows={3} />
           </div>
           <DialogFooter className='md:col-span-2'>
             <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-              Annulla
+              {tr.common.cancel}
             </Button>
             <Button type='submit' className='bg-primary hover:bg-primary-700'>
-              Registra paziente
+              {tr.pazienti.registerPatient}
             </Button>
           </DialogFooter>
         </form>

@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/table';
 import { AlertTriangle, Package, Plus, Search } from 'lucide-react';
 import { inventario, type InventoryItem } from '@/lib/data/inventory';
+import { useT } from '@/lib/i18n/store';
 
 const categoryStyles: Record<InventoryItem['categoria'], string> = {
   Consumabili: 'bg-sky-100 text-sky-700 border-sky-200',
@@ -26,6 +27,13 @@ const categoryStyles: Record<InventoryItem['categoria'], string> = {
 const categorie = ['Tutti', 'Consumabili', 'Attrezzatura', 'Farmaci', 'Tessili'] as const;
 
 export function InventoryTable() {
+  const t = useT();
+  const categoryLabel: Record<InventoryItem['categoria'], string> = {
+    Consumabili: t.inventory.catConsumables,
+    Attrezzatura: t.inventory.catEquipment,
+    Farmaci: t.inventory.catDrugs,
+    Tessili: t.inventory.catTextiles
+  };
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<(typeof categorie)[number]>('Tutti');
 
@@ -49,32 +57,32 @@ export function InventoryTable() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Inventario</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{t.inventory.title}</h1>
           <p className='text-sm text-muted-foreground'>
-            Gestione magazzino — {totale} articoli monitorati
+            {t.inventory.warehouse} — {totale} {t.inventory.itemsMonitored}
           </p>
         </div>
         <Button className='gap-2'>
-          <Plus className='h-4 w-4' /> Nuovo Articolo
+          <Plus className='h-4 w-4' /> {t.inventory.newItem}
         </Button>
       </div>
 
       <div className='grid gap-4 md:grid-cols-4'>
-        <StatCard label='Articoli totali' value={totale.toString()} />
+        <StatCard label={t.inventory.totalItems} value={totale.toString()} />
         <StatCard
-          label='Sotto soglia'
+          label={t.inventory.belowThreshold}
           value={sottoSoglia.toString()}
           tone={sottoSoglia > 0 ? 'warn' : undefined}
         />
         <StatCard
-          label='Valore magazzino'
+          label={t.inventory.warehouseValue}
           value={valore.toLocaleString('it-IT', {
             style: 'currency',
             currency: 'EUR',
             maximumFractionDigits: 0
           })}
         />
-        <StatCard label='Fornitori attivi' value={fornitori.toString()} />
+        <StatCard label={t.inventory.activeSuppliers} value={fornitori.toString()} />
       </div>
 
       {sottoSoglia > 0 && (
@@ -82,10 +90,10 @@ export function InventoryTable() {
           <CardContent className='flex items-center gap-3 p-4'>
             <AlertTriangle className='h-5 w-5 text-amber-600' />
             <div className='text-sm'>
-              <span className='font-semibold text-amber-900'>{sottoSoglia} articoli</span>{' '}
-              <span className='text-amber-800'>
-                sono sotto la soglia minima e richiedono riordino.
-              </span>
+              <span className='font-semibold text-amber-900'>
+                {sottoSoglia} {t.inventory.itemsBelowThreshold1}
+              </span>{' '}
+              <span className='text-amber-800'>{t.inventory.itemsBelowThreshold2}</span>
             </div>
           </CardContent>
         </Card>
@@ -96,7 +104,7 @@ export function InventoryTable() {
           <div className='relative flex-1 min-w-[240px]'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <Input
-              placeholder='Cerca per nome o fornitore...'
+              placeholder={t.inventory.searchItemPh}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className='pl-9'
@@ -109,7 +117,7 @@ export function InventoryTable() {
               size='sm'
               onClick={() => setFilter(c)}
             >
-              {c}
+              {c === 'Tutti' ? t.common.all : categoryLabel[c as InventoryItem['categoria']]}
             </Button>
           ))}
         </CardContent>
@@ -118,22 +126,22 @@ export function InventoryTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center gap-2 text-base'>
-            <Package className='h-4 w-4' /> Articoli ({filtered.length})
+            <Package className='h-4 w-4' /> {t.inventory.itemsCount} ({filtered.length})
           </CardTitle>
-          <CardDescription>Elenco completo con livelli di stock</CardDescription>
+          <CardDescription>{t.inventory.fullList}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Articolo</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead className='text-right'>Quantità</TableHead>
-                <TableHead className='text-right'>Soglia</TableHead>
-                <TableHead>Stato</TableHead>
-                <TableHead className='text-right'>Costo Unit.</TableHead>
-                <TableHead>Fornitore</TableHead>
-                <TableHead>Ultimo riordino</TableHead>
+                <TableHead>{t.inventory.item}</TableHead>
+                <TableHead>{t.common.category}</TableHead>
+                <TableHead className='text-right'>{t.inventory.quantity}</TableHead>
+                <TableHead className='text-right'>{t.inventory.threshold}</TableHead>
+                <TableHead>{t.common.status}</TableHead>
+                <TableHead className='text-right'>{t.inventory.unitCost}</TableHead>
+                <TableHead>{t.inventory.supplier}</TableHead>
+                <TableHead>{t.inventory.lastReorder}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -144,7 +152,7 @@ export function InventoryTable() {
                     <TableCell className='font-medium'>{i.nome}</TableCell>
                     <TableCell>
                       <Badge variant='outline' className={categoryStyles[i.categoria]}>
-                        {i.categoria}
+                        {categoryLabel[i.categoria]}
                       </Badge>
                     </TableCell>
                     <TableCell className='text-right tabular-nums'>
@@ -159,14 +167,14 @@ export function InventoryTable() {
                           className='bg-amber-100 text-amber-800 border-amber-200'
                           variant='outline'
                         >
-                          Riordina
+                          {t.inventory.reorderAction}
                         </Badge>
                       ) : (
                         <Badge
                           className='bg-emerald-100 text-emerald-700 border-emerald-200'
                           variant='outline'
                         >
-                          OK
+                          {t.inventory.okLabel}
                         </Badge>
                       )}
                     </TableCell>

@@ -42,17 +42,12 @@ import {
   Search
 } from 'lucide-react';
 import { invoices, type Invoice, type InvoiceStatus } from '@/lib/data/billing';
+import { useT } from '@/lib/i18n/store';
 
 const statoStyles: Record<InvoiceStatus, string> = {
   pagata: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   'in-attesa': 'bg-amber-100 text-amber-700 border-amber-200',
   scaduta: 'bg-rose-100 text-rose-700 border-rose-200'
-};
-
-const statoLabel: Record<InvoiceStatus, string> = {
-  pagata: 'Pagata',
-  'in-attesa': 'In attesa',
-  scaduta: 'Scaduta'
 };
 
 const stati = ['Tutte', 'pagata', 'in-attesa', 'scaduta'] as const;
@@ -66,6 +61,12 @@ function euro(n: number) {
 }
 
 export function BillingPanel() {
+  const t = useT();
+  const statoLabel: Record<InvoiceStatus, string> = {
+    pagata: t.billing.statusPaid,
+    'in-attesa': t.billing.statusPending,
+    scaduta: t.billing.statusOverdue
+  };
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<(typeof stati)[number]>('Tutte');
   const [open, setOpen] = useState(false);
@@ -105,9 +106,9 @@ export function BillingPanel() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Fatturazione</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{t.billing.title}</h1>
           <p className='text-sm text-muted-foreground'>
-            Fatture, pagamenti e piano attivo — {invoices.length} documenti
+            {t.billing.subtitle} — {invoices.length} {t.billing.docs}
           </p>
         </div>
         <NewInvoiceDialog open={open} onOpenChange={setOpen} />
@@ -116,29 +117,29 @@ export function BillingPanel() {
       <div className='grid gap-4 md:grid-cols-4'>
         <StatCard
           icon={<Euro className='h-4 w-4' />}
-          label='Fatturato mese'
+          label={t.billing.revenueMonth}
           value={euro(stats.mese)}
-          hint='ultimi 30 giorni'
+          hint={t.billing.last30}
           tone='emerald'
         />
         <StatCard
           icon={<FileText className='h-4 w-4' />}
-          label='Fatture emesse'
+          label={t.billing.invoicesIssued}
           value={stats.emesse.toString()}
-          hint='nel mese corrente'
+          hint={t.billing.currentMonth}
         />
         <StatCard
           icon={<Clock className='h-4 w-4' />}
-          label='Da incassare'
+          label={t.billing.toCollect}
           value={euro(stats.daIncassare)}
-          hint='fatture in attesa'
+          hint={t.billing.pendingInvoices}
           tone='amber'
         />
         <StatCard
           icon={<AlertTriangle className='h-4 w-4' />}
-          label='Scadute'
+          label={t.billing.overdueLabel}
           value={euro(stats.scadute)}
-          hint='richiedono solleciti'
+          hint={t.billing.needReminders}
           tone='rose'
         />
       </div>
@@ -146,24 +147,22 @@ export function BillingPanel() {
       <div className='grid gap-4 md:grid-cols-3'>
         <Card className='md:col-span-2'>
           <CardHeader className='pb-3'>
-            <CardTitle className='text-base'>Piano attivo</CardTitle>
-            <CardDescription>Gestione abbonamento MediAnalytics</CardDescription>
+            <CardTitle className='text-base'>{t.billing.activePlan}</CardTitle>
+            <CardDescription>{t.billing.subscription}</CardDescription>
           </CardHeader>
           <CardContent className='flex flex-col gap-3'>
             <div className='flex items-center justify-between rounded-lg border bg-gradient-to-r from-sky-50 to-indigo-50 p-4'>
               <div>
                 <div className='flex items-center gap-2'>
-                  <span className='font-semibold'>Piano Pro</span>
+                  <span className='font-semibold'>{t.billing.planPro}</span>
                   <Badge variant='outline' className='border-sky-200 bg-sky-100 text-sky-700'>
-                    Attivo
+                    {t.billing.activeBadge}
                   </Badge>
                 </div>
-                <div className='text-sm text-muted-foreground'>
-                  €49/mese · fatturazione annuale · prossimo rinnovo 15 maggio 2026
-                </div>
+                <div className='text-sm text-muted-foreground'>{t.billing.planDetails}</div>
               </div>
               <Button variant='outline' size='sm'>
-                Cambia piano
+                {t.billing.changePlan}
               </Button>
             </div>
             <div className='flex items-center justify-between rounded-lg border p-4'>
@@ -173,11 +172,11 @@ export function BillingPanel() {
                 </div>
                 <div>
                   <div className='font-semibold'>Visa •••• 4242</div>
-                  <div className='text-xs text-muted-foreground'>Scadenza 08/2028</div>
+                  <div className='text-xs text-muted-foreground'>{t.billing.expiry} 08/2028</div>
                 </div>
               </div>
               <Button variant='ghost' size='sm'>
-                Aggiorna
+                {t.billing.update}
               </Button>
             </div>
           </CardContent>
@@ -185,8 +184,8 @@ export function BillingPanel() {
 
         <Card>
           <CardHeader className='pb-3'>
-            <CardTitle className='text-base'>Prossimi incassi</CardTitle>
-            <CardDescription>Fatture in attesa pagamento</CardDescription>
+            <CardTitle className='text-base'>{t.billing.upcomingCollections}</CardTitle>
+            <CardDescription>{t.billing.awaitingPayment}</CardDescription>
           </CardHeader>
           <CardContent className='flex flex-col gap-2'>
             {invoices
@@ -202,7 +201,7 @@ export function BillingPanel() {
                       {i.pazienteNome} {i.pazienteCognome}
                     </div>
                     <div className='text-xs text-muted-foreground'>
-                      Scad. {new Date(i.scadenza).toLocaleDateString('it-IT')}
+                      {t.billing.dueAbbr} {new Date(i.scadenza).toLocaleDateString('it-IT')}
                     </div>
                   </div>
                   <span className='font-semibold tabular-nums'>{euro(i.importo)}</span>
@@ -217,7 +216,7 @@ export function BillingPanel() {
           <div className='relative flex-1 min-w-[240px]'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <Input
-              placeholder='Cerca numero, paziente, descrizione...'
+              placeholder={t.billing.searchPlaceholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className='pl-9'
@@ -230,7 +229,7 @@ export function BillingPanel() {
               size='sm'
               onClick={() => setFilter(s)}
             >
-              {s === 'Tutte' ? 'Tutte' : statoLabel[s as InvoiceStatus]}
+              {s === 'Tutte' ? t.common.all : statoLabel[s as InvoiceStatus]}
             </Button>
           ))}
         </CardContent>
@@ -238,19 +237,21 @@ export function BillingPanel() {
 
       <Card>
         <CardHeader>
-          <CardTitle className='text-base'>Fatture ({filtered.length})</CardTitle>
-          <CardDescription>Ordinate per data più recente</CardDescription>
+          <CardTitle className='text-base'>
+            {t.billing.invoices} ({filtered.length})
+          </CardTitle>
+          <CardDescription>{t.billing.sortedByDate}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>N°</TableHead>
-                <TableHead>Data</TableHead>
-                <TableHead>Paziente</TableHead>
-                <TableHead>Descrizione</TableHead>
-                <TableHead>Stato</TableHead>
-                <TableHead className='text-right'>Importo</TableHead>
+                <TableHead>{t.billing.numberAbbr}</TableHead>
+                <TableHead>{t.common.date}</TableHead>
+                <TableHead>{t.appointments.patient}</TableHead>
+                <TableHead>{t.billing.description}</TableHead>
+                <TableHead>{t.common.status}</TableHead>
+                <TableHead className='text-right'>{t.common.amount}</TableHead>
                 <TableHead className='w-10' />
               </TableRow>
             </TableHeader>
@@ -336,6 +337,7 @@ function NewInvoiceDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const tr = useT();
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onOpenChange(false);
@@ -345,56 +347,56 @@ function NewInvoiceDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button className='gap-2'>
-          <Plus className='h-4 w-4' /> Nuova Fattura
+          <Plus className='h-4 w-4' /> {tr.billing.newInvoice}
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[520px]'>
         <DialogHeader>
-          <DialogTitle>Nuova fattura</DialogTitle>
-          <DialogDescription>Emetti una nuova fattura per un paziente.</DialogDescription>
+          <DialogTitle>{tr.billing.newInvoice}</DialogTitle>
+          <DialogDescription>{tr.billing.newInvoiceDesc}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='grid gap-4 md:grid-cols-2'>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Paziente</Label>
-            <Input placeholder='Nome e cognome' />
+            <Label className='mb-1.5 block'>{tr.appointments.patient}</Label>
+            <Input placeholder={tr.appointments.patientPh} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Data emissione</Label>
+            <Label className='mb-1.5 block'>{tr.billing.issueDate}</Label>
             <Input type='date' defaultValue={new Date().toISOString().slice(0, 10)} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Scadenza</Label>
+            <Label className='mb-1.5 block'>{tr.billing.dueDate}</Label>
             <Input
               type='date'
               defaultValue={new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10)}
             />
           </div>
           <div className='md:col-span-2'>
-            <Label className='mb-1.5 block'>Descrizione</Label>
-            <Input placeholder='Es. Ciclo riabilitativo - 10 sedute' />
+            <Label className='mb-1.5 block'>{tr.billing.description}</Label>
+            <Input placeholder={tr.billing.descExample} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Importo (€)</Label>
+            <Label className='mb-1.5 block'>{tr.billing.amountEur}</Label>
             <Input type='number' defaultValue={450} min={0} step={10} />
           </div>
           <div>
-            <Label className='mb-1.5 block'>Metodo pagamento</Label>
+            <Label className='mb-1.5 block'>{tr.billing.paymentMethod}</Label>
             <Select defaultValue='carta'>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='carta'>Carta</SelectItem>
-                <SelectItem value='bonifico'>Bonifico</SelectItem>
-                <SelectItem value='contanti'>Contanti</SelectItem>
+                <SelectItem value='carta'>{tr.billing.methodCard}</SelectItem>
+                <SelectItem value='bonifico'>{tr.billing.methodBank}</SelectItem>
+                <SelectItem value='contanti'>{tr.billing.methodCash}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <DialogFooter className='md:col-span-2'>
             <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-              Annulla
+              {tr.common.cancel}
             </Button>
-            <Button type='submit'>Emetti fattura</Button>
+            <Button type='submit'>{tr.billing.issueInvoice}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

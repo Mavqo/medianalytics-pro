@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Mail, Phone, Search, Star, UserPlus, Users } from 'lucide-react';
 import { terapeuti, type Therapist } from '@/lib/data/therapists';
+import { useT } from '@/lib/i18n/store';
 
 const statusStyles: Record<Therapist['disponibilita'], string> = {
   Disponibile: 'bg-emerald-100 text-emerald-700 border-emerald-200',
@@ -26,6 +27,12 @@ function initials(name: string): string {
 }
 
 export function TherapistsGrid() {
+  const tr = useT();
+  const statusLabel: Record<Therapist['disponibilita'], string> = {
+    Disponibile: tr.therapists.statusAvailable,
+    Occupato: tr.therapists.statusBusy,
+    'In ferie': tr.therapists.statusVacation
+  };
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'Tutti' | Therapist['disponibilita']>('Tutti');
 
@@ -49,21 +56,21 @@ export function TherapistsGrid() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Terapeuti</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{tr.therapists.title}</h1>
           <p className='text-sm text-muted-foreground'>
-            Staff clinico — {terapeuti.length} professionisti attivi
+            {tr.therapists.clinicalStaff} — {terapeuti.length} {tr.therapists.activeProfessionals}
           </p>
         </div>
         <Button className='gap-2'>
-          <UserPlus className='h-4 w-4' /> Nuovo Terapeuta
+          <UserPlus className='h-4 w-4' /> {tr.therapists.newTherapist}
         </Button>
       </div>
 
       <div className='grid gap-4 md:grid-cols-4'>
-        <StatCard label='Staff attivo' value={terapeuti.length.toString()} />
-        <StatCard label='Disponibili ora' value={disponibili.toString()} />
-        <StatCard label='Pazienti totali' value={totalePazienti.toString()} />
-        <StatCard label='Rating medio' value={`${ratingMedio} / 5`} />
+        <StatCard label={tr.therapists.activeStaff} value={terapeuti.length.toString()} />
+        <StatCard label={tr.therapists.availableNow} value={disponibili.toString()} />
+        <StatCard label={tr.therapists.totalPatients} value={totalePazienti.toString()} />
+        <StatCard label={tr.therapists.avgRating} value={`${ratingMedio} / 5`} />
       </div>
 
       <Card>
@@ -71,7 +78,7 @@ export function TherapistsGrid() {
           <div className='relative flex-1 min-w-[240px]'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <Input
-              placeholder='Cerca per nome, ruolo o specializzazione...'
+              placeholder={tr.therapists.searchTherapistPh}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className='pl-9'
@@ -84,7 +91,7 @@ export function TherapistsGrid() {
               size='sm'
               onClick={() => setFilter(s)}
             >
-              {s}
+              {s === 'Tutti' ? tr.common.all : statusLabel[s]}
             </Button>
           ))}
         </CardContent>
@@ -104,7 +111,7 @@ export function TherapistsGrid() {
                   <CardTitle className='text-base leading-tight'>{t.nome}</CardTitle>
                   <CardDescription>{t.ruolo}</CardDescription>
                   <Badge variant='outline' className={statusStyles[t.disponibilita]}>
-                    {t.disponibilita}
+                    {statusLabel[t.disponibilita]}
                   </Badge>
                 </div>
               </div>
