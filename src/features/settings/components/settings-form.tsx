@@ -1,0 +1,269 @@
+'use client';
+
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Bell, Building2, CreditCard, Save, Shield, User } from 'lucide-react';
+
+export function SettingsForm() {
+  const [saved, setSaved] = useState(false);
+
+  function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  return (
+    <div className='flex flex-col gap-6'>
+      <div>
+        <h1 className='text-3xl font-bold tracking-tight'>Impostazioni</h1>
+        <p className='text-sm text-muted-foreground'>
+          Gestisci account, clinica, notifiche e sicurezza
+        </p>
+      </div>
+
+      <Tabs defaultValue='account' className='w-full'>
+        <TabsList className='grid w-full grid-cols-2 md:grid-cols-5'>
+          <TabsTrigger value='account' className='gap-2'>
+            <User className='h-4 w-4' /> Account
+          </TabsTrigger>
+          <TabsTrigger value='clinica' className='gap-2'>
+            <Building2 className='h-4 w-4' /> Clinica
+          </TabsTrigger>
+          <TabsTrigger value='notifiche' className='gap-2'>
+            <Bell className='h-4 w-4' /> Notifiche
+          </TabsTrigger>
+          <TabsTrigger value='fatturazione' className='gap-2'>
+            <CreditCard className='h-4 w-4' /> Fatturazione
+          </TabsTrigger>
+          <TabsTrigger value='sicurezza' className='gap-2'>
+            <Shield className='h-4 w-4' /> Sicurezza
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value='account'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Profilo personale</CardTitle>
+              <CardDescription>Informazioni mostrate su fatture e comunicazioni</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSave} className='grid gap-4 md:grid-cols-2'>
+                <Field label='Nome' defaultValue='Marco' />
+                <Field label='Cognome' defaultValue='Ricci' />
+                <Field label='Email' type='email' defaultValue='marco.ricci@clinica.it' />
+                <Field label='Telefono' defaultValue='+39 091 234 5678' />
+                <div className='md:col-span-2'>
+                  <Label className='mb-1.5 block'>Ruolo</Label>
+                  <Select defaultValue='admin'>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='admin'>Amministratore</SelectItem>
+                      <SelectItem value='medico'>Medico</SelectItem>
+                      <SelectItem value='staff'>Staff clinico</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className='md:col-span-2'>
+                  <Label className='mb-1.5 block'>Bio</Label>
+                  <Textarea defaultValue='Direttore clinico con 15 anni di esperienza in fisioterapia.' />
+                </div>
+                <div className='md:col-span-2 flex items-center gap-3'>
+                  <Button type='submit' className='gap-2'>
+                    <Save className='h-4 w-4' /> Salva modifiche
+                  </Button>
+                  {saved && <span className='text-sm text-emerald-600'>Salvato ✓</span>}
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value='clinica'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Dati clinica</CardTitle>
+              <CardDescription>Ragione sociale, contatti, orari</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSave} className='grid gap-4 md:grid-cols-2'>
+                <Field label='Ragione sociale' defaultValue='Centro Fisioterapico Palermo SRL' />
+                <Field label='P.IVA' defaultValue='IT 01234567890' />
+                <Field label='Indirizzo' defaultValue='Via Roma 123' />
+                <Field label='Città' defaultValue='Palermo' />
+                <Field label='CAP' defaultValue='90133' />
+                <Field label='Telefono clinica' defaultValue='+39 091 555 0000' />
+                <Field label='Apertura' type='time' defaultValue='08:00' />
+                <Field label='Chiusura' type='time' defaultValue='20:00' />
+                <div className='md:col-span-2'>
+                  <Button type='submit' className='gap-2'>
+                    <Save className='h-4 w-4' /> Salva
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value='notifiche'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Preferenze notifiche</CardTitle>
+              <CardDescription>Scegli cosa ricevere e come</CardDescription>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-1'>
+              <ToggleRow
+                title='Promemoria appuntamenti'
+                desc='Email e SMS ai pazienti 24h prima della seduta'
+                defaultChecked
+              />
+              <Separator />
+              <ToggleRow
+                title='Alert stock basso'
+                desc='Notifica quando un articolo scende sotto la soglia'
+                defaultChecked
+              />
+              <Separator />
+              <ToggleRow
+                title='Report settimanale'
+                desc='Ogni lunedì via email con KPI e fatturato'
+                defaultChecked
+              />
+              <Separator />
+              <ToggleRow
+                title='Nuove recensioni'
+                desc='Notifica push ogni volta che un paziente lascia feedback'
+              />
+              <Separator />
+              <ToggleRow
+                title='Aggiornamenti prodotto'
+                desc='Novità e release note di MediAnalytics'
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value='fatturazione'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Piano e fatturazione</CardTitle>
+              <CardDescription>Piano attivo e metodo di pagamento</CardDescription>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-4'>
+              <div className='flex items-center justify-between rounded-lg border p-4'>
+                <div>
+                  <div className='font-semibold'>Piano Pro</div>
+                  <div className='text-sm text-muted-foreground'>
+                    €49/mese · fatturazione annuale
+                  </div>
+                </div>
+                <Button variant='outline'>Cambia piano</Button>
+              </div>
+              <div className='flex items-center justify-between rounded-lg border p-4'>
+                <div>
+                  <div className='font-semibold'>Visa •••• 4242</div>
+                  <div className='text-sm text-muted-foreground'>Scadenza 08/2028</div>
+                </div>
+                <Button variant='outline'>Aggiorna</Button>
+              </div>
+              <div className='flex items-center justify-between rounded-lg border p-4'>
+                <div>
+                  <div className='font-semibold'>Prossimo rinnovo</div>
+                  <div className='text-sm text-muted-foreground'>15 maggio 2026 · €588</div>
+                </div>
+                <Button variant='ghost'>Fatture</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value='sicurezza'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Sicurezza account</CardTitle>
+              <CardDescription>Password, 2FA, sessioni attive</CardDescription>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-4'>
+              <form onSubmit={handleSave} className='grid gap-4 md:grid-cols-2'>
+                <Field label='Password attuale' type='password' />
+                <div />
+                <Field label='Nuova password' type='password' />
+                <Field label='Conferma password' type='password' />
+                <div className='md:col-span-2'>
+                  <Button type='submit' variant='outline' className='gap-2'>
+                    <Save className='h-4 w-4' /> Aggiorna password
+                  </Button>
+                </div>
+              </form>
+              <Separator />
+              <ToggleRow
+                title='Autenticazione a 2 fattori'
+                desc='Richiedi un codice via app authenticator al login'
+                defaultChecked
+              />
+              <Separator />
+              <ToggleRow
+                title='Avviso login sospetti'
+                desc='Email quando il login arriva da un dispositivo nuovo'
+                defaultChecked
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  type = 'text',
+  defaultValue
+}: {
+  label: string;
+  type?: string;
+  defaultValue?: string;
+}) {
+  return (
+    <div>
+      <Label className='mb-1.5 block'>{label}</Label>
+      <Input type={type} defaultValue={defaultValue} />
+    </div>
+  );
+}
+
+function ToggleRow({
+  title,
+  desc,
+  defaultChecked
+}: {
+  title: string;
+  desc: string;
+  defaultChecked?: boolean;
+}) {
+  return (
+    <div className='flex items-center justify-between py-3'>
+      <div>
+        <div className='text-sm font-medium'>{title}</div>
+        <div className='text-xs text-muted-foreground'>{desc}</div>
+      </div>
+      <Switch defaultChecked={defaultChecked} />
+    </div>
+  );
+}
